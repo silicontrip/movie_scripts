@@ -5,26 +5,27 @@ use LWP::Simple qw($ua get);
 use URI::Escape;
 use Time::Local;
 use Getopt::Std;
+use LWP::Simple;
+
+$tvdir = "/Volumes/Drobo/TVSeries";
+$dlpath = "/Volumes/Drobo/nzb/tmp";
 
 $ua -> timeout(30);
 
 %options=();
-getopts("vhigad:e",\%options);
+getopts("vhigad:eEG",\%options);
 
 $nodays = 0;
-$retention= 200 * 86400;  # 200 days
+$retention= 1500 * 86400;  # 200 days
 if ($options{a}) { $nodays = 1; }
-if ($options{g}) { $autoget = 1; $retention = 7 * 86400; }
+if ($options{g}) { $autoget = 1;  $retention = 7 * 86400; }
 if ($options{d}) { $retention = $options{d} * 86400; }
 if ($options{i}) { $ignore = 1; }
 if ($options{v}) { $verbose = 1; }
 if ($options{e}) { $nodays = 1; $eseug = 1; }
+if ($options{E}) { $nodays = 1; $haseseug = 1; }
+if ($options{G}) { $nzbget = 1; }
 if ($options{h}) { print "usage series_tracker [-agi] [-d days]\n\t-a show all, do not limit by age\n\t-d do not show episodes older than days (default 200)\n\t-g get nzb file for missing episodes\n\t-i ignore the .ignore file\n"; exit; }
-
-
-#print "$ARGV[0] - $ARGV[1] - $ARGV[2]\n";
-
-
 
 %month= (
 Jan => "0",
@@ -43,7 +44,7 @@ Dec => "11"
 
 sub tracker_print ($) {
 	
-	if (!$autoget || $verbose) {
+	if ((!$haseseug && !$eseug && !$autoget) || $verbose) {
 		print @_;
 	}
 }
@@ -54,6 +55,76 @@ sub verbose_print ($) {
 	}
 }
 
+sub series_print ($) {
+
+	my (%serieslist) = @_;
+	
+	#determine series.
+	
+	my %series;
+	my $sep;
+	my $sn;
+	for $sep (keys(%serieslist)) {
+		($sn) = split(/-/,$sep);
+		$series{$sn} = 1;
+	}
+	
+	my $state;
+	my $sn;
+	for $sn (sort (keys(%series))) {
+		my %episodelist;
+		for $sep (sort (keys(%serieslist))) {
+			my ($s,$ep) = split(/-/,$sep);
+			if ($s == $sn) {
+				my $pep  = sprintf("%02d",$ep);
+			&verbose_print("$pep " . $serieslist{$sep} . "\n");
+				$episodelist{$pep} = $serieslist{$sep};
+			}
+		}	
+		$state = $episodelist{"01"};
+		
+		$break = 0;
+		my $lastchange = 1;
+		$compact = "Season " . $sn . " Episode ";
+		&verbose_print ("starting state: $state\n");
+		if ($state == -1) {
+			$compact = $compact . "1";
+		}
+		my $epend;
+		for $ep (sort (keys(%episodelist))) {
+			if ($episodelist{$ep}!=$state) {
+			&verbose_print("state change $ep " . $episodelist{$ep} . "\n");
+				$state = $episodelist{$ep};
+				if ($state == 1) {
+					my $decep = $ep - 1;
+					&verbose_print("lastchange $lastchange current $decep\n");
+					if ($decep != $lastchange) { 
+						$compact = $compact .  "-" . $decep ;
+					}
+				} else {
+				if ($break > 0) { $compact = $compact . ", "; }
+					my $decep = $ep + 0;
+					$compact = $compact . "$decep"  ;
+				}
+				$break++;
+				$lastchange = $ep;
+			}
+			$epend = $ep + 0 ;
+		}
+		if ($state == -1) {
+			if ($epend != $lastchange) { 
+				$compact = $compact . "-" . $epend;
+			}
+		}
+	
+		if ($break == 0 && $state == -1) {
+				print "Season $sn All\n";
+		} elsif ($break != 0) {
+				print $compact . "\n";
+		}
+	}
+	print "\n";
+}
 
 sub name_expand ($$) {
 
@@ -257,15 +328,16 @@ sub date_to_diff ($) {
 	my ($dd,$mm,$yy) = split(/\//,$date);
 	my $time_diff;
 	
-	&verbose_print( "($dd) ($mm) ($yy)\n");
+	&verbose_print( "date_to_diff: ($dd) ($mm) ($yy)\n");
 	if (!$yy) {
 		($yy,$mm,$dd) = split(/-/,$date);
-		&verbose_print( "($dd) ($mm) ($yy)\n");
+		&verbose_print( "date_to_diff: no yy ($dd) ($mm) ($yy)\n");
 		
 		if ($dd) {
 			$time_diff =time  - timelocal (59,59,23,$dd,$mm-1,$yy);
 		} else { 
-			$time_diff= NaN;
+			&verbose_print ("Unable to interpret date: $date. sentinel diff value\n");
+			$time_diff=-99999999;
 		}
 	} else {
 		if ($yy < 20) { $yy += 2000; } else {$yy += 1900; }
@@ -278,6 +350,50 @@ sub date_to_diff ($) {
 	return $time_diff;
 }	
 sub get_nzb_nzbclub($$) { 
+	my ($dlpath,$n) = @_;
+	
+	my $link;
+	my $base;
+	my $nzburl="http://www.nzbclub.com/search.aspx?ig=2&szs=16&st=1&sp=1&ns=1&q=";
+	my $nzbhost = "http://www.nzbclub.com";
+	my $name = uri_escape($n);
+	my $count =0;
+	&verbose_print( "SEARCH: $nzburl$name\n");
+	
+	my $filelist = get("$nzburl$name");
+	my @lines = split /(\r|\n|\r\n)/, $filelist;
+	foreach $_  (@lines) {
+		if (/Get NZB<\/a>/) {
+			($link) = $_ =~ /.*href="([^"]*)"/; # " # to help syntax highlighting editors.
+			if ($link ne "http://nzbindex.nl/") {
+				$base = $link;
+				$base =~ s/.*\///;
+					&verbose_print ("SEARCH: $nzburl$name\n");
+					&verbose_print ("DOWNLOAD: $link\n");
+					&verbose_print ("FILE: $dlpath/$base\n");
+				
+				if (! -r "$dlpath/$base" ) {
+					print( "SEARCH: $nzburl$name\n");
+					$link = $nzbhost . $link;
+					print( "DOWNLOADING: $link to $dlpath/$base\n");
+					print("\nhttps://silicontrip.net/%7emark/nzbqueue.php\n");
+					&tracker_print( "\n");
+					
+					open FILE,">$dlpath/$base";
+					print FILE  get($link);
+					close FILE;
+				} else {
+					&verbose_print( "EXISTS: $dlpath/$base\n");
+				}
+					
+				$count ++;
+			}
+		}
+	}
+	&verbose_print( "\n");
+	return $count;
+}
+sub get_nzb_nzbclub_feed($$) { 
 	
 	my ($dlpath,$n) = @_;
 	
@@ -322,11 +438,13 @@ sub get_nzb_nzbclub($$) {
 }	
 
 
-use LWP::Simple;
+if ($nzbget) {
+while ($dl = shift) {
+	&get_nzb_nzbclub (".", $dl);
+}
+exit;
+}
 
-
-$tvdir = "/Volumes/Drobo/TVSeries";
-$dlpath = "/Volumes/Drobo/nzb/tmp";
 
 
 #$contents = get("");
@@ -376,14 +494,13 @@ while($entry=readdir $dh) {
 					%serieslist = ();
 					for $episodes (sort(keys(%episodelist))) 
 					{
-						if ($eseug) {
-							$serieslist{$episodes} = 1;
-						}
+						if ($eseug) { $serieslist{$episodes} = 1; }
+						if ($haseseug) { $serieslist{$episodes} = -1; }
 						if (!$diskepisode{$episodes}) 
 						{
 							$complete = 0;
 							
-							&verbose_print( $episodes . " - " . $episodelist{$episodes} . "\n");
+							&verbose_print( "Episodes: " . $episodes . " - " . $episodelist{$episodes} . "\n");
 							
 							($date) = split(/ /,$episodelist{$episodes});
 							$time_diff = &date_to_diff($date);
@@ -398,7 +515,13 @@ while($entry=readdir $dh) {
 								$time_diff /= 86400;
 								$time_diff = sprintf ("%d",$time_diff);
 								if ($eseug) {
-									$serieslist{$episodes}=-1;
+									&verbose_print( "time diff for ESEUG print $time_diff\n");
+
+									if ($time_diff >= 0) {
+										$serieslist{$episodes}=-1;
+									}
+								} elsif ($haseseug) {
+									$serieslist{$episodes} = 1;
 								} else {
 									&tracker_print ("DOESN'T HAVE $episodes $episodelist{$episodes} $time_diff days\n");
 								}
@@ -434,11 +557,11 @@ while($entry=readdir $dh) {
 						}
 					}
 
-					if ($eseug) {
+					if ($eseug || $haseseug) {
 						if (!$complete) {
 							print "$title : \n";
 							# series compact
-
+							&series_print(%serieslist);	
 						}
 					} else {
 						if ($complete) { &tracker_print ("COMPLETE\n") ; } else {  &tracker_print ("INCOMPLETE\n"); }
