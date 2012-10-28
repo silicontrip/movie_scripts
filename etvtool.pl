@@ -21,10 +21,30 @@ $result = GetOptions ("export|e" => \$action_export,
 "enable|E" => \$set_enabled,
 "disable|D" => \$set_disabled,
 "help|h" => \$get_help,
+"yes|y" => \$i_am_sure
 );
 
 if ($get_help) {
-
+print "Eye TV Tool.  A command line interface for controlling the Eye TV PVR software.\n";
+print "Usage etvtool.pl [OPTION]\n\n";
+print "Actions:\n";
+print "--export  Export selected recordings\n";
+print "--delete  Delete selected recordings or programs\n";
+print "--new     Create a new program\n";
+print "--enable  Enable a program\n";
+print "--disable Disable a program\n";
+print "-h --help This help\n";
+print "\nSelecting programs and recordings:\n";
+print "If nothing is selected here every program and recording is selected\n";
+print "-t --title <title> Select matching sub string\n";
+print "-i --id <id>       Select matching id.  id can be a range eg 1234-1245\n";
+print "\nSet program data:\n";
+print "-s --start <YYYY-MM-DD HH:MM:SS> Set start time of a program\n";
+print "-u --settitle <title>            Set the title of a program or recording\n";
+print "-l --length <seconds>            Set the record duration of a program\n";
+print "-p --repeats <days>              Set the repeats of the program\n";
+print "             <Sund|Mond|Tues|Wedn|Thur|Frid|Satu|Week|Wknd|Dail> comma separated for multiple days\n";
+print "-C --channel <channel>           Set the channel number of the program\n";
 
 exit;
 }
@@ -44,6 +64,14 @@ print "### RECORDINGS ###\n\n";
 
 my @list = EyeTV::getRecordings();
 
+# going to early exit
+
+if (((!$match_id) || (!$match_title)) && ($action_export || $action_remove) && !$i_am_sure)
+{
+	print "Export or Delete with no recordings selected\n";
+	print "if you're sure add -Y\n";
+	exit;
+}
 
 for my $id (sort(@list)) {
 	
