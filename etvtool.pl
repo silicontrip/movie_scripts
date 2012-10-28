@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
 # I should find a good home for these
-use lib "/Users/mark";
+use lib "/Users/mark/Movies/bin";
 
 use EyeTV;
 

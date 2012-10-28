@@ -194,8 +194,12 @@ sub setStartFromString  {
 	
 	my( $self,$title ) = @_;
 
+
 	# keep this the same format as the output time
-	my ($year,$mon,$mday, $hour,$min,$sec) = $title =~ /(\d\d\d\d)-(\d\d)-(\d\d) (\d\d):(\d\d):(\d\d)/;
+	my ($year,$mon,$mday, $hour,$min,$sec) = $title =~ /(\d\d\d\d)-(\d\d)-(\d\d) (\d+):(\d\d):(\d\d)/;
+
+	
+	#print "set start to: $year, $mon, $mday, $hour, $min, $sec\n";
 	
 	my $time = timelocal($sec,$min,$hour,$mday,$mon-1,$year);
 	
