@@ -20,7 +20,14 @@ $result = GetOptions ("export|e" => \$action_export,
 "channel|C=s" => \$set_channel,
 "enable|E" => \$set_enabled,
 "disable|D" => \$set_disabled,
+"help|h" => \$get_help,
 );
+
+if ($get_help) {
+
+
+exit;
+}
 
 
 if ($action_create) {
