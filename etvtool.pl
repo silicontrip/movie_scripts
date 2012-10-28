@@ -8,8 +8,8 @@ use EyeTV;
 use Cwd;
 use Getopt::Long;
 
-$result = GetOptions ("export|e" => \$action_export,
-"delete|d"   => \$action_remove,
+$result = GetOptions ("export" => \$action_export,
+"delete"   => \$action_remove,
 "id|i=s" => \$match_id,
 "title|t=s" => \$match_title,
 "new|n" => \$action_create,
@@ -28,16 +28,17 @@ if ($get_help) {
 	print "Eye TV Tool.  A command line interface for controlling the Eye TV PVR software.\n";
 	print "Usage etvtool.pl [OPTION]\n\n";
 	print "Actions:\n";
-	print "--export  Export selected recordings\n";
-	print "--delete  Delete selected recordings or programs\n";
-	print "--new     Create a new program\n";
-	print "--enable  Enable a program\n";
-	print "--disable Disable a program\n";
+	print "--export     Export selected recordings\n";
+	print "--delete     Delete selected recordings or programs\n";
+	print "-n --new     Create a new program\n";
+	print "-E --enable  Enable a program\n";
+	print "-D --disable Disable a program\n";
 	print "-h --help This help\n";
 	print "\nSelecting programs and recordings:\n";
-	print "If nothing is selected here every program and recording is selected\n";
+	print "If nothing is selected here every program and recording is selected.\n";
 	print "-t --title <title> Select matching sub string\n";
 	print "-i --id <id>       Select matching id.  id can be a range eg 1234-1245\n";
+	print "-y --yes           Allow actions on Every program and recording\n";
 	print "\nSet program data:\n";
 	print "-s --start <YYYY-MM-DD HH:MM:SS> Set start time of a program\n";
 	print "-u --settitle <title>            Set the title of a program or recording\n";
@@ -56,7 +57,7 @@ if ($action_create) {
 	
 	$match_id = EyeTV::createProgram($set_title,$set_channel,$set_start,$set_duration);
 	
-	($set_title,$set_channel,$set_start,$set_duration) = ();
+	#($set_title,$set_channel,$set_start,$set_duration) = ();
 	
 	
 }
