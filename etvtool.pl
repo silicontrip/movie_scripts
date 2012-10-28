@@ -60,18 +60,18 @@ if ($action_create) {
 	
 	
 }
-print "### RECORDINGS ###\n\n";
 
-my @list = EyeTV::getRecordings();
-
-# going to early exit
-
-if (((!$match_id) || (!$match_title)) && ($action_export || $action_remove) && !$i_am_sure)
+# going to early exit for "unsafe" operations
+if (((!$match_id) || (!$match_title)) && ($action_export || $action_remove || $set_start || $set_title || $set_duration || $set_repeats || $set_channel || $set_enabled || $set_disabled) && !$i_am_sure)
 {
-	print "Export or Delete with no recordings selected\n";
+	print "No recordings or programs selected for action\n";
 	print "if you're sure add -Y\n";
 	exit;
 }
+
+print "### RECORDINGS ###\n\n";
+
+my @list = EyeTV::getRecordings();
 
 for my $id (sort(@list)) {
 	
