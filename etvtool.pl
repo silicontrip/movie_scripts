@@ -21,7 +21,7 @@ $result = GetOptions ("export" => \$action_export,
 "enable|E" => \$set_enabled,
 "disable|D" => \$set_disabled,
 "help|h" => \$get_help,
-"yes|y" => \$i_am_sure
+"yes|Y" => \$i_am_sure
 );
 
 if ($get_help) {
@@ -33,18 +33,18 @@ if ($get_help) {
 	print "-n --new     Create a new program\n";
 	print "-E --enable  Enable a program\n";
 	print "-D --disable Disable a program\n";
-	print "-h --help This help\n";
+	print "-h --help    This help\n";
 	print "\nSelecting programs and recordings:\n";
-	print "If nothing is selected here every program and recording is selected.\n";
+	print "If nothing is selected here, every program and recording is selected.\n";
 	print "-t --title <title> Select matching sub string\n";
 	print "-i --id <id>       Select matching id.  id can be a range eg 1234-1245\n";
-	print "-y --yes           Allow actions on Every program and recording\n";
+	print "-Y --yes           Allow actions on every program and recording\n";
 	print "\nSet program data:\n";
 	print "-s --start <YYYY-MM-DD HH:MM:SS> Set start time of a program\n";
 	print "-u --settitle <title>            Set the title of a program or recording\n";
 	print "-l --length <seconds>            Set the record duration of a program\n";
 	print "-p --repeats <days>              Set the repeats of the program\n";
-	print "             <Sund|Mond|Tues|Wedn|Thur|Frid|Satu|Week|Wknd|Dail> comma separated for multiple days\n";
+	print "             [None|Sund|Mond|Tues|Wedn|Thur|Frid|Satu|Week|Wknd|Dail] comma separated for multiple days\n";
 	print "-C --channel <channel>           Set the channel number of the program\n";
 
 	exit;
@@ -53,9 +53,9 @@ if ($get_help) {
 
 if ($action_create) {
 	
-	print "CREATE:\n";
 	
 	$match_id = EyeTV::createProgram($set_title,$set_channel,$set_start,$set_duration);
+	print "CREATE program: $match_id\n";
 	
 	#($set_title,$set_channel,$set_start,$set_duration) = ();
 	
@@ -133,14 +133,16 @@ for my $id (sort(@prglist)) {
 	#print "$id\n";
 	
 	my $rec = new EyeTV($id,EyeTV::EyeTVProgram());
+        my $recording = new EyeTV($id,EyeTV::EyeTVRecording());
 	
 	#print "is rec\n";
 
 	# programs also contain recordings.
 	# the only way to determine a recording is if it doesn't repeat
-	if ($rec && $rec->isRepeating()) {
+	#if ($rec && $rec->isRepeating()) {
+
+	if ($rec && !$recording) {
 		if($rec->matchID($match_id) && $rec->matchTitle($match_title)) {
-			
 			
 			$rec->setTitle($set_title) if ($set_title);
 			$rec->setDuration($set_duration) if ($set_duration);
