@@ -94,12 +94,23 @@ sub createProgram  {
 	
 	my ($titl, $chnm, $stim, $dura) = @_;
 
-	my $q = "kocl:type(cPrg),prdt:reco{Titl:utxt(\"".$titl."\"), Chnm:long(" . $chnm . "), Stim:'ldt '(" . $stim . "), Dura:long(" . $dura . "), enbl:fals}";
+	my ($year,$mon,$mday, $hour,$min,$sec) = $stim =~ /(\d\d\d\d)-(\d\d)-(\d\d) (\d+):(\d\d):(\d\d)/;
+	my $time = timelocal($sec,$min,$hour,$mday,$mon-1,$year)  + 2082880800; 
+
+	#print "Start Time: $time\n";
+
+	my $ldt = pack ('LL',$time);
+
+
+
+	my $q = "kocl:type(cPrg),prdt:reco{Titl:utxt(\"".$titl."\"), Chnm:long(" . $chnm . "), Stim:'ldt '(@), Dura:long(" . $dura . "), enbl:fals}";
+	#my $q = "kocl:type(cPrg),prdt:reco{Titl:utxt(\"".$titl."\"), Chnm:long(" . $chnm . "),  Dura:long(" . $dura . "), enbl:fals}";
 	
 	# and populate with data
 	
+	print "Create Event: $q\n";
 	
-	my $evt= build_event(qw/core crel EyTV/,$q);
+	my $evt= build_event(qw/core crel EyTV/,$q,$ldt);
 	
 	print AEPrint ($evt->{EVT}) . "\n";
 	
@@ -172,6 +183,7 @@ sub setTitle {
 	$prop = 'Titl';
 	
 	my $q = "'----':'obj '{ form:enum(prop), want:type(prop), seld:type(" . $prop . "), from:'obj '{ form:enum('ID  '), want:type(" .$obj . "), seld:long(" . $id  . "), from:null() } }, data:utxt(\"" . $title . "\")";
+	#my $q = "'----':'obj '{ form:enum(prop), want:type(prop), seld:type(@), from:'obj '{ form:enum('ID  '), want:type(@), seld:long(@), from:null() } }, data:utxt(@)";
 	
 	my $evt= build_event(qw/core setd EyTV/,$q);
 	my $res =$evt->send_event(kAEWaitReply); 
@@ -194,8 +206,12 @@ sub setStartFromString  {
 	
 	my( $self,$title ) = @_;
 
+
 	# keep this the same format as the output time
-	my ($year,$mon,$mday, $hour,$min,$sec) = $title =~ /(\d\d\d\d)-(\d\d)-(\d\d) (\d\d):(\d\d):(\d\d)/;
+	my ($year,$mon,$mday, $hour,$min,$sec) = $title =~ /(\d\d\d\d)-(\d\d)-(\d\d) (\d+):(\d\d):(\d\d)/;
+
+	
+	#print "set start to: $year, $mon, $mday, $hour, $min, $sec\n";
 	
 	my $time = timelocal($sec,$min,$hour,$mday,$mon-1,$year);
 	
