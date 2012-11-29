@@ -157,7 +157,7 @@ sub geteplist_thetvdb ($) {
 		#;;;1 - 1;;;;Hairy Maclary from Donaldson's Dairy;;;;;; &nbsp;;;
 		#;;;1 - 1;;;;The First Time;;;2012-01-09;;; &nbsp;;;
 		
-		($se,$ep,$epname,$date) = $line =~ /;*(\d+) - (\d+);*([^;]*);*(\d\d\d\d-\d\d-\d\d);*.*$/;
+		($se,$ep,$epname,$date) = $line =~ /;*(\d+) [-x] (\d+);*([^;]*);*(\d\d\d\d-\d\d-\d\d);*.*$/;
 	# some series are missing dates
 		if (!$date) {
 			$date = "TBA";
@@ -192,13 +192,13 @@ sub get_se ($) {
 	$season ="";
 	$episode ="";
 	
-	if ($n =~ /[^\d](\d?\d)(\d\d)[^\d]/)
+	if ($n =~ /[^\d](\d)(\d\d)[^\d]/)
 	{ $season = $1; $episode = $2; }
 	if ($n =~ /(\d?\d)[xe](\d\d?)/i) 
 	{ $season = $1; $episode = $2; }
 	if ($n =~ /S(\d?\d)[^\d]*E(\d\d?)/i)
 	{ $season = $1; $episode = $2; }
-	if ($n =~ /[^\d](\d?\d)[^\d]+(\d\d)[^\d]/i)
+	if ($n =~ /[^\d](\d?\d)[^\d](\d\d)[^\d]/i)
 	{ $season = $1; $episode = $2; }
 	if ($n =~ /S(\d?\d)E(\d\d)/i)
 	{ $season = $1; $episode = $2; }
@@ -310,12 +310,10 @@ $result = GetOptions ("no-rename|t" => \$test, "name|N=s" => \$name, "move|m" =>
 # print "id: $id\n";
 
 
-
-
 if (!$id && !$name) {
 	$name = findname ($targetdir,$ARGV[0]);
 	#print "Chosen $name\n";
-	die "Must specify name (-N) or thetvdb id (-i)\nExiting" unless ($name);
+	die "Must specify name (-N) or thetvdb id (-i)\ncannot find $ARGV[0]" unless ($name);
 	$id = &name_to_id($name,$targetdir);
 }
 
