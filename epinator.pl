@@ -209,7 +209,7 @@ sub get_movie_meta ($) {
 	
 	my ($n) = @_;
 	
-	foreach (`mplayer -benchmark -ao null -vo null -identify -frames 0 "$n"`) {
+	foreach (`/opt/local/bin/mplayer -benchmark -ao null -vo null -identify -frames 0 "$n"`) {
 		chop;
 		
 		if (/^ID_DEMUXER/) { ($ext) = /=(.*)/; }
