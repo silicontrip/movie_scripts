@@ -23,10 +23,11 @@ sub new
 					#print "$episode\n";
 					
 					$epregex = $episode;
-					$epregex =~ s/([a-z])([A-Z])/$1.*$2/g;
-					$epregex =~ s/([a-zA-Z])([0-9])/$1.*$2/g;
-					$epregex =~ s/([0-9])([a-zA-Z])/$1.*$2/g;
-					$epregex =~ s/([A-Z])([A-Z])/$1.*$2/g;
+					$epregex =~ s/([a-z])([A-Z])/$1\\W*$2/g;
+					$epregex =~ s/([a-zA-Z])([0-9])/$1\\W*$2/g;
+					$epregex =~ s/([0-9])([a-zA-Z])/$1\\W*$2/g;
+					$epregex =~ s/([A-Z])([A-Z])/$1\\W*$2/g;
+					$epregex =~ s/_/\\W*/g;
 					
 					$epregexlist{$episode} = $epregex;
 					
@@ -95,13 +96,17 @@ sub seriesName {
 	my $found = "";
 	my $epregex;
 	
-	for $series (keys(%{$self->{_epRegex}})) {
+	for $series (sort (keys(%{$self->{_epRegex}}))) {
 		$regex = $self->{_epRegex}{$series};
-		print "DEBUG: " . $series . "=> $regex\n";
 
-		if ($filename =~/$regex/i) {
+		#print "File: $filename <=> $regex\n";
+		
+		if ($filename =~ /$regex/i) {
+			#print "MATCH: " . length($series) . " " . length($found) ."\n";
+			
 			if (length($series)>length($found))
 			{
+				# print "SET";
 				$found = $series;
 			}
 		}

@@ -11,7 +11,7 @@ while ($filename = shift) {
 	
 	$episode = $epfac->episode($filename);
 	
-	print "$filename: series: " . $episode->seriesNumber() . " episode: " . $episode->episodeNumber() . " Series Name: " . $episode->episodeName() . "\n";
+	print "$filename: series: " . $episode->seriesNumber() . " episode: " . $episode->episodeNumber() . " Series Name: " . $episode->seriesName() . "\n";
 	
 
 }
