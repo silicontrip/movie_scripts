@@ -40,3 +40,4 @@ sub episodeName {
     $self->{_epName} = $episodeName if defined($episodeName);
     return $self->{_epName};
 }
+1;
