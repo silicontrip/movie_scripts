@@ -16,8 +16,10 @@ sub new
 	if (opendir($sdh,$self->{_targetDir}) ) {
 		while($episode=readdir $sdh) {
 			if (!($episode =~ /^\./)) {
-				#print "$targetdir / $episode\n";
-				if ( -d "$targetdir/$episode") {
+				$target = $self->{_targetDir} . "/" . $episode;
+				#print "$target\n";
+
+				if ( -d $target) {
 					#print "$episode\n";
 					
 					$epregex = $episode;
@@ -95,6 +97,8 @@ sub seriesName {
 	
 	for $series (keys(%{$self->{_epRegex}})) {
 		$regex = $self->{_epRegex}{$series};
+		print "DEBUG: " . $series . "=> $regex\n";
+
 		if ($filename =~/$regex/i) {
 			if (length($series)>length($found))
 			{
