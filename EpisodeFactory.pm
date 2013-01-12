@@ -17,10 +17,8 @@ sub new
 		while($episode=readdir $sdh) {
 			if (!($episode =~ /^\./)) {
 				$target = $self->{_targetDir} . "/" . $episode;
-				#print "$target\n";
 
 				if ( -d $target) {
-					#print "$episode\n";
 					
 					$epregex = $episode;
 					$epregex =~ s/([a-z])([A-Z])/$1\\W*$2/g;
@@ -96,17 +94,14 @@ sub seriesName {
 	my $found = "";
 	my $epregex;
 	
-	for $series (sort (keys(%{$self->{_epRegex}}))) {
+	for $series (keys(%{$self->{_epRegex}})) {
 		$regex = $self->{_epRegex}{$series};
 
-		#print "File: $filename <=> $regex\n";
 		
 		if ($filename =~ /$regex/i) {
-			#print "MATCH: " . length($series) . " " . length($found) ."\n";
 			
 			if (length($series)>length($found))
 			{
-				# print "SET";
 				$found = $series;
 			}
 		}
