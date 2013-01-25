@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dictionary SYSTEM "file://localhost/System/Library/DTDs/sdef.dtd">
+<dictionary>
+  <suite name="Required Suite" code="reqd" description="Terms that every application should support">
+    <command name="launch" code="aevtoapp" description="Launch EyeTV">
+      <parameter name="server mode" code="srVR" type="boolean" optional="yes" description="When server mode is specified, EyeTV will not show its user interface right after launch."/>
+    </command>
+    <command name="open" code="aevtodoc" description="Open the specified object(s)">
+      <direct-parameter type="specifier" description="Objects to open. Can be a list of files or an object specifier."/>
+    </command>
+    <command name="print" code="aevtpdoc" description="Print the specified object(s)">
+      <direct-parameter type="specifier" description="Objects to print. Can be a list of files or an object specifier."/>
+    </command>
+    <command name="quit" code="aevtquit" description="Terminate the EyeTV application."/>
+  </suite>
+  <suite name="Standard Suite" code="CoRe" description="Common terms for most applications">
+    <command name="close" code="coreclos" description="Close an object">
+      <direct-parameter type="specifier" description="the objects to close"/>
+      <parameter name="saving" code="savo" type="savo" optional="yes" description="specifies whether or not changes should be saved before closing"/>
+      <parameter name="in" code="kfil" type="alias" optional="yes" description="the file in which to save the object"/>
+    </command>
+    <command name="data size" code="coredsiz" description="Return the size in bytes of an object">
+      <direct-parameter type="specifier" description="the object whose data size is to be returned"/>
+      <result type="integer" description="the size of the object in bytes"/>
+    </command>
+    <command name="get" code="coregetd" description="Get the data for an object">
+      <direct-parameter type="specifier" description="the object whose data is to be returned"/>
+    </command>
+    <command name="make" code="corecrel" description="Make a new element">
+      <parameter name="new" code="kocl" type="type" description="the class of the new element"/>
+      <parameter name="at" code="insh" type="location specifier" optional="yes" description="the location at which to insert the element"/>
+      <parameter name="with data" code="data" type="any" optional="yes" description="the initial data for the element"/>
+      <parameter name="with properties" code="prdt" type="record" optional="yes" description="the initial values for the properties of the element"/>
+    </command>
+    <command name="save" code="coresave" description="save a set of objects">
+      <direct-parameter type="specifier" description="Objects to save."/>
+      <parameter name="in" code="kfil" type="alias" optional="yes" description="the file in which to save the object(s)"/>
+      <parameter name="as" code="fltp" type="type" optional="yes" description="the file type of the document in which to save the data"/>
+    </command>
+    <command name="set" code="coresetd" description="Set an object’s data">
+      <direct-parameter type="specifier" description="the object to change"/>
+      <parameter name="to" code="data" type="any" description="the new value"/>
+    </command>
+    <command name="delete" code="coredelo" description="Delete an object.">
+      <direct-parameter type="specifier" description="The object to delete."/>
+      <result type="specifier" description="A reference to the object just deleted."/>
+    </command>
+    <class name="application" code="capp" description="An application program">
+      <element type="window"/>
+      <element type="document"/>
+    </class>
+    <class name="window" code="cwin" description="A Window">
+      <property name="bounds" code="pbnd" type="rectangle" description="the boundary rectangle for the window"/>
+      <property name="closeable" code="hclb" type="boolean" access="r" description="Does the window have a close box?"/>
+      <property name="titled" code="ptit" type="boolean" access="r" description="Does the window have a title bar?"/>
+      <property name="index" code="pidx" type="integer" description="the number of the window"/>
+      <property name="floating" code="isfl" type="boolean" access="r" description="Does the window float?"/>
+      <property name="modal" code="pmod" type="boolean" access="r" description="Is the window modal?"/>
+      <property name="resizable" code="prsz" type="boolean" access="r" description="Is the window resizable?"/>
+      <property name="zoomable" code="iszm" type="boolean" access="r" description="Is the window zoomable?"/>
+      <property name="zoomed" code="pzum" type="boolean" description="Is the window zoomed?"/>
+      <property name="name" code="pnam" type="text" description="the title of the window"/>
+      <property name="visible" code="pvis" type="boolean" access="r" description="is the window visible?"/>
+      <property name="position" code="ppos" type="point" access="r" description="upper left coordinates of window"/>
+    </class>
+    <class name="document" code="docu" description="A Document">
+      <property name="name" code="pnam" type="text" access="r" description="the title of the document"/>
+      <property name="modified" code="imod" type="boolean" access="r" description="Has the document been modified since the last save?"/>
+    </class>
+    <enumeration name="savo" code="savo">
+      <enumerator name="yes" code="yes " description="Save objects now"/>
+      <enumerator name="no" code="no  " description="Do not save objects"/>
+      <enumerator name="ask" code="ask " description="Ask the user whether to save"/>
+    </enumeration>
+  </suite>
+  <suite name="Miscellaneous Standards" code="misc" description="Useful events that aren’t in any other suite">
+    <command name="revert" code="miscrvrt" description="Revert an object to the most recently saved version">
+      <direct-parameter type="specifier" description="object to revert"/>
+    </command>
+  </suite>
+  <suite name="odds and ends" code="Odds" description="Things that should be in some standard suite, but aren’t">
+    <command name="SetTellTarget" code="ppntsttg" description="Makes an object the “focus” of AppleEvents">
+      <parameter name="to" code="data" type="specifier" optional="yes" description="reference to new focus of AppleEvents"/>
+    </command>
+    <command name="select" code="miscslct" description="Select the specified object">
+      <direct-parameter type="specifier" optional="yes" description="the object to select"/>
+    </command>
+  </suite>
+  <suite name="EyeTV Suite" code="EyTV" description="Terms used to control EyeTV directly">
+    <command name="enter full screen" code="EyTVEnfs" description="enters full screen mode for the frontmost player."/>
+    <command name="exit full screen" code="EyTVExfs" description="exits full screen mode"/>
+    <command name="pause" code="EyTVPaus" description="pause playback"/>
+    <command name="play" code="EyTVPlay" description="play">
+      <direct-parameter type="specifier" optional="yes" description="recording to play"/>
+    </command>
+    <command name="playpause" code="EyTVPlps" description="toggles playback"/>
+    <command name="stop" code="EyTVStop" description="stops playback"/>
+    <command name="fast forward" code="EyTVFast" description="fast forwards playback"/>
+    <command name="fast backward" code="EyTVFasb" description="fast backwards playback"/>
+    <command name="slow forward" code="EyTVSlow" description="slow forwards playback"/>
+    <command name="slow backward" code="EyTVSlob" description="slow backwards playback"/>
+    <command name="start recording" code="EyTVReco" description="starts recording"/>
+    <command name="stop recording" code="EyTVRece" description="stops recording"/>
+    <command name="jump" code="EyTVJump" description="jumps to specified time. “from ending” implies a negative offset.">
+      <parameter name="to" code="To  " type="double integer" description="time in seconds"/>
+      <parameter name="from" code="Tmod" type="Tmod" optional="yes" description="how to interpret the time parameter"/>
+    </command>
+    <command name="next frame" code="EyTVNxfr" description="skips to next frame"/>
+    <command name="previous frame" code="EyTVPvfr" description="skips to previous frame"/>
+    <command name="skip forward" code="EyTVSkfd" description="skips forward"/>
+    <command name="skip backward" code="EyTVSkbd" description="skips backward"/>
+    <command name="input_change" code="EyTVIncg" description="change input">
+      <parameter name="input source" code="Insc" type="Isrc"/>
+    </command>
+    <command name="channel_up" code="EyTVChup" description="changes to one channel up"/>
+    <command name="channel_down" code="EyTVChdn" description="changes to one channel down"/>
+    <command name="channel_change" code="EyTVChch" description="changes to specified channel">
+      <parameter name="channel number" code="Chnm" type="text" description="channel number"/>
+    </command>
+    <command name="volume_up" code="EyTVVlup" description="raises volume"/>
+    <command name="volume_down" code="EyTVVldn" description="lowers volume"/>
+    <command name="volume_change" code="EyTVVlch" description="changes volume">
+      <parameter name="level" code="Levl" type="real" description="volume level"/>
+    </command>
+    <command name="mute" code="EyTVMute" description="toggle mute status"/>
+    <command name="export" code="EyTVExpo" description="export recording">
+      <parameter name="from" code="Esrc" type="recording" optional="yes" description="recording to export (default is the selected recording)"/>
+      <parameter name="to" code="Etgt" type="alias" optional="yes" description="file to export to"/>
+      <parameter name="as" code="Etyp" type="Etyp" optional="yes" description="type of export (default is QuickTime)"/>
+      <parameter name="replacing" code="Repl" type="boolean" optional="yes" description="replace file if it exists (default is false)"/>
+      <parameter name="opening" code="Opng" type="boolean" optional="yes" description="open file when done exporting (default is false)"/>
+    </command>
+    <command name="show" code="EyTVShow" description="show an object">
+      <direct-parameter type="specifier" description="the object to show"/>
+    </command>
+    <command name="hide" code="EyTVHide" description="hide an object">
+      <direct-parameter type="specifier" description="the object to hide"/>
+    </command>
+    <command name="showhide" code="EyTVSohi" description="show/hide an object">
+      <direct-parameter type="specifier" description="the object to show/hide"/>
+    </command>
+    <command name="clear EPG database" code="EyTVCEPG" description="clears the EPG database"/>
+    <command name="open fullscreen menu" code="EyTVoMNU" description="Open the specified fullscreen menu"/>
+    <class-extension extends="application" description="the EyeTV application">
+      <element type="player_window"/>
+      <element type="program"/>
+      <element type="recording"/>
+      <element type="channel"/>
+      <element type="favorites list"/>
+      <property name="current recording" code="Crid" type="double integer" access="r" description="unique id of the current (frontmost) recording. Returns 0 if there is none."/>
+      <property name="programs window" code="Prgw" type="programs_window" access="r" description="schedule dialog"/>
+      <property name="controller window" code="Ctrw" type="controller_window" access="r" description="remote controller"/>
+      <property name="current channel" code="Crch" type="text" description="current channel"/>
+      <property name="full screen" code="Fuls" type="boolean" description="full screen mode"/>
+      <property name="floatontop" code="ScFT" type="boolean" access="r"/>
+      <property name="full screen menu" code="FScM" type="boolean" description="full screen menu"/>
+      <property name="playback volume" code="Volu" type="real" description="playback volume"/>
+      <property name="volume muted" code="Mutd" type="boolean" description="Is the playback volume used, or has it been muted?"/>
+      <property name="repository url" code="Rurl" type="file" access="r" description="url of current repository"/>
+      <property name="server mode" code="SrvM" type="boolean" access="r" description="whether EyeTV is still in server mode"/>
+      <property name="prepad time" code="Prpd" type="integer" description="prepad time in minutes"/>
+      <property name="postpad time" code="Pspd" type="integer" description="postpad time in minutes"/>
+      <property name="screenshot" code="ScnS" type="file" access="r" description="path to screenshot file"/>
+      <property name="current time" code="CTme" type="real" description="time displayed in the remote control"/>
+      <property name="playing" code="Plng" type="boolean" access="r" description="play state of the application"/>
+      <property name="is_recording" code="IRcd" type="boolean" access="r" description="recording state of the application"/>
+      <property name="user interaction level" code="eInl" type="eInl" description="How EyeTV should interact (if necessary) with the user in response to Apple Events generated by itself, local application, and remote applications."/>
+      <property name="full screen guide" code="FScG" type="boolean" access="r" description="full screen guide"/>
+      <property name="current favorites list" code="cFav" type="favorites list" description="The current favorite channel list that is used for the remote control."/>
+      <property name="audio sync offset" code="ASyO" type="double integer" description="Offset audio so it is earlier/later than the video. This is a positive/negative number of seconds (positive means the sound is ahead of the picture). This is reset back to zero 10 seconds after you change it."/>
+      <property name="alert menu open" code="AMeO" type="boolean" access="r" description="Is a modal fullscreen alert message open?"/>
+      <property name="is Turbo Hardware Plugged In" code="isHw" type="boolean" access="r" description="True if the Turbo.264 hardware is plugged in."/>
+      <property name="is_exporting" code="Iexp" type="boolean" access="r" description="true if application is exporting a recording"/>
+      <property name="is_compacting" code="Icom" type="boolean" access="r" description="true if application is compacting a recording"/>
+      <property name="is_saving_clip_as_recording" code="ISCr" type="boolean" access="r" description="true if application is saving a clip as recording"/>
+    </class-extension>
+    <class name="programs_window" code="cPrw" description="window containing the list of programs and recordings" inherits="window">
+      <element type="program"/>
+      <element type="recording"/>
+      <property name="selection" code="sele" description="A list containing every selected recording, channel or schedule (program) in the programs window, depending on what the current category is.">
+        <type type="list" list="yes"/>
+      </property>
+    </class>
+    <class name="controller_window" code="cCtw" description="remote controller" inherits="window"/>
+    <class name="player_window" code="cPlw" description="window for displaying a movie" inherits="window" plural="player_windows">
+      <property name="program info" code="Prgi" access="r" description="A record containing information on the current and the next program on the current channel, if available.">
+        <type type="list" list="yes"/>
+      </property>
+      <property name="signal lock" code="dLck" type="boolean" description="device signal lock"/>
+      <property name="current channel" code="Crch" type="text" description="current channel"/>
+      <property name="current recording" code="Crid" type="double integer" access="r" description="unique id of the current (frontmost) recording. Returns 0 if there is none."/>
+      <property name="audio channel" code="ACHN" type="eACH" access="r" description="Which audio channels should be played back."/>
+    </class>
+    <class name="program" code="cPrg" description="contains description" plural="programs">
+      <element type="program"/>
+      <property name="start time" code="Stim" type="date" description="scheduled start time"/>
+      <property name="duration" code="Dura" type="real" description="scheduled duration"/>
+      <property name="title" code="Titl" type="text" description="program title, synonym: name"/>
+      <property name="description" code="Pdsc" type="text" description="description of the program"/>
+      <property name="channel number" code="Chnm" type="text" description="channel number"/>
+      <property name="station name" code="Stnm" type="text" description="station name"/>
+      <property name="input source" code="Isrc" type="Isrc" description="input source"/>
+      <property name="repeats" code="Rpts" type="Rpts" description="Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday, weekdays, weekends, daily, never."/>
+      <property name="quality" code="Qual" type="Qual" description="quality of recording"/>
+      <property name="enabled" code="enbl" type="boolean" description="Enabled status"/>
+      <property name="unique ID" code="Unqu" type="double integer" access="r" description="a number that identifies this program"/>
+    </class>
+    <class name="recording" code="cRec" description="a recording" plural="recordings">
+      <property name="busy" code="RTsk" type="boolean" access="r" description="true while the recording is being exported, compacted, updated etc."/>
+      <property name="start time" code="Stim" type="date" access="r" description="scheduled start time"/>
+      <property name="duration" code="Dura" type="real" access="r" description="scheduled duration"/>
+      <property name="title" code="Titl" type="text" description="program title"/>
+      <property name="episode" code="Epis" type="text" description="recording episode, synonym: name"/>
+      <property name="description" code="Pdsc" type="text" description="description of the program"/>
+      <property name="channel number" code="Chnm" type="text" access="r" description="channel number"/>
+      <property name="station name" code="Stnm" type="text" access="r" description="station name"/>
+      <property name="input source" code="Isrc" type="Isrc" access="r" description="input source"/>
+      <property name="repeats" code="Rpts" type="unsigned integer" access="r" description="one bit set for each day: bit 0: Monday, bit 1: Tuesday etc"/>
+      <property name="quality" code="Qual" type="Qual" access="r" description="quality of recording"/>
+      <property name="prepad time" code="Prpd" type="double integer" access="r" description="prepad time"/>
+      <property name="postpad time" code="Pspd" type="double integer" access="r" description="postpad time"/>
+      <property name="actual start" code="Acst" type="date" access="r" description="actual start time"/>
+      <property name="actual duration" code="Acdu" type="real" access="r" description="actual duration"/>
+      <property name="playback position" code="Ppos" type="real" description="recording will start playback at this position when it is opened"/>
+      <property name="unique ID" code="Unqu" type="double integer" access="r" description="a number that identifies this program"/>
+      <property name="location" code="pURL" type="file" access="r" description="url to the .eyetvr file"/>
+      <property name="markers" code="Mrks" description="List of all markers’ time offsets and their durations.">
+        <type type="list" list="yes"/>
+      </property>
+    </class>
+    <class name="channel" code="cCha" description="a channel" plural="channels">
+      <property name="channel number" code="Chnn" type="text" access="r" description="channel number"/>
+      <property name="name" code="pnam" type="text" description="channel name"/>
+      <property name="enabled" code="enbl" type="boolean" description="enabled status"/>
+    </class>
+    <class name="favorites list" code="cFaL" description="A named channel list showing a selection of our complete channel list." plural="favorites lists">
+      <element type="channel"/>
+      <property name="name" code="pnam" type="text" access="r" description="The name of this list, as displayed to and specified by the user."/>
+    </class>
+    <enumeration name="Rpts" code="Rpts">
+      <enumerator name="Monday" code="Mond"/>
+      <enumerator name="Tuesday" code="Tues"/>
+      <enumerator name="Wednesday" code="Wedn"/>
+      <enumerator name="Thursday" code="Thur"/>
+      <enumerator name="Friday" code="Frid"/>
+      <enumerator name="Saturday" code="Satu"/>
+      <enumerator name="Sunday" code="Sund"/>
+      <enumerator name="never" code="Neve"/>
+      <enumerator name="none" code="None"/>
+      <enumerator name="daily" code="Dail"/>
+      <enumerator name="weekdays" code="Week"/>
+      <enumerator name="weekends" code="Wknd"/>
+    </enumeration>
+    <enumeration name="Isrc" code="Isrc">
+      <enumerator name="composite video input" code="Comp"/>
+      <enumerator name="tuner input" code="Tune"/>
+      <enumerator name="SVideo input" code="Svid"/>
+      <enumerator name="component video input" code="Cmpt"/>
+    </enumeration>
+    <enumeration name="Qual" code="Qual">
+      <enumerator name="standard" code="Stan"/>
+      <enumerator name="high" code="High"/>
+    </enumeration>
+    <enumeration name="Tmod" code="Tmod">
+      <enumerator name="start" code="Star" description="from start"/>
+      <enumerator name="current" code="Curr" description="from current position"/>
+      <enumerator name="ending" code="Endi" description="from end"/>
+    </enumeration>
+    <enumeration name="Etyp" code="Etyp">
+      <enumerator name="QuickTime" code="Quic" description="export to QuickTime"/>
+      <enumerator name="VCD" code="VCD " description="Video CD"/>
+      <enumerator name="SVCD" code="SVCD" description="Super Video CD"/>
+      <enumerator name="DVD" code="DVD " description="DVD"/>
+      <enumerator name="DivXDisc" code="Dvxd" description="DivX Disc"/>
+      <enumerator name="Toast" code="Toas" description="Toast"/>
+      <enumerator name="eMail" code="Emal" description="eMail"/>
+      <enumerator name="Web" code="Web " description="Web"/>
+      <enumerator name="iMovie" code="IMov" description="iMovie"/>
+      <enumerator name="iMovieHD" code="IMHD" description="iMovie HD"/>
+      <enumerator name="iDVD" code="iDVD" description="iDVD"/>
+      <enumerator name="DVDStudioPro" code="DSP " description="DVD Studio Pro"/>
+      <enumerator name="Toast" code="Tost" description="Toast"/>
+      <enumerator name="MPEGPS" code="MPEG" description="MPEG Program Stream for MPEG1/2, AVI for MPEG 4"/>
+      <enumerator name="MPEGES" code="MPES" description="MPEG Elementary Streams"/>
+      <enumerator name="DV" code="dvc!" description="DV Stream (4:3)"/>
+      <enumerator name="DV169" code="Dvc+" description="DV Stream (16:9)"/>
+      <enumerator name="Movie" code="MooV" description="QuickTime file format"/>
+      <enumerator name="AVI" code="VfW " description="AVI file format"/>
+      <enumerator name="MPEG4" code="mpg4" description="MPEG-4 file format"/>
+      <enumerator name="ThreeG" code="3gpp" description="3G file format"/>
+      <enumerator name="DivX" code="DivX" description="DivX AVI"/>
+      <enumerator name="HDV720p" code="HD72" description="HDV720p"/>
+      <enumerator name="HDV1080i" code="HD18" description="HDV1080i"/>
+      <enumerator name="iTunes" code="ITun" description="iTunes AAC format"/>
+      <enumerator name="AAC" code="alac" description="AAC (Advanced Audio Codec)"/>
+      <enumerator name="AppleLossless" code="alac" description="Apple Lossless format"/>
+      <enumerator name="PSP" code="PSP " description="Playstation Portable format"/>
+      <enumerator name="PSPH264" code="PSPH" description="Playstation Portable format with H.264 video"/>
+      <enumerator name="iPod" code="iPod" description="iPod (default) - exports with default H.264 settings"/>
+      <enumerator name="iPodMP4" code="iPdM" description="iPod (recommended) - exports with MPEG-4 settings optimized for fast encoding"/>
+      <enumerator name="AppleTV" code="ApTV" description="Apple TV - exports with H.264 settings optimized for the Apple TV"/>
+      <enumerator name="iPhone" code="iPhn" description="iPhone - resolution optimized for iPhone"/>
+      <enumerator name="Turbo" code="Turb" description="Turbo - using Elgato Turbo.264 HD device"/>
+      <enumerator name="BluRay" code="BDMV" description="Blu-Ray Video"/>
+      <enumerator name="iPad" code="iPad" description="iPad - exports with H.264 settings optimized for the iPad"/>
+      <enumerator name="HD720p" code="H720" description="HD 720p - resolution up to 1280x720"/>
+      <enumerator name="HD1080p" code="H180" description="HD 1080p - resolution up to 1920x1080"/>
+    </enumeration>
+    <enumeration name="eInl" code="eInl">
+      <enumerator name="never interact" code="eNvr" description="Never interact. In some cases, the application will perform a default action, in others it will return an interactionNotAllowed error."/>
+      <enumerator name="interact with self" code="eInS" description="Allow interaction with AppleEvents sent by EyeTV itself, e.g. a script launched by EyeTV’s script menu. Usually, there’s a user in front of the computer then."/>
+      <enumerator name="interact with local" code="eInL" description="Allow interaction when the AppleEvent comes from an application on the local computer (this includes EyeTV itself)."/>
+      <enumerator name="interact with all" code="eInA" description="Allow interaction with all applications - EyeTV, local, remote."/>
+    </enumeration>
+    <enumeration name="eMNU" code="eMNU">
+      <enumerator name="EPG" code="mEPG" description="The program guide overlay menu."/>
+      <enumerator name="Channels" code="mCHN" description="The Channel list overlay menu."/>
+      <enumerator name="Favorites" code="mFAV" description="The favorite channel list chooser overlay menu."/>
+      <enumerator name="Schedules" code="mSCH" description="The Schedules overlay menu."/>
+      <enumerator name="Library" code="mREC" description="The Recordings overlay menu."/>
+    </enumeration>
+    <enumeration name="eACH" code="eACH">
+      <enumerator name="Stereo" code="Mste" description="Play stereo sound."/>
+      <enumerator name="Left Channel" code="Mlft" description="Play only the left channel, ignoring audio from the right one."/>
+      <enumerator name="Right Channel" code="Mrgt" description="Play only the right channel, ignoring audio from the left one."/>
+    </enumeration>
+  </suite>
+</dictionary>
