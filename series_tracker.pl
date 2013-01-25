@@ -295,7 +295,7 @@ sub eplist_thetvdb ($) {
 		#;;;1 - 1;;;;Hairy Maclary from Donaldson's Dairy;;;;;; &nbsp;;;
 		#;;;1 - 1;;;;The First Time;;;2012-01-09;;; &nbsp;;;
 		
-		($se,$ep,$epname,$date) = $line =~ /;*(\d+) - (\d+);*([^;]*);*(\d\d\d\d-\d\d-\d\d);*.*$/;
+		($se,$ep,$epname,$date) = $line =~ /;*(\d+) [-x] (\d+);*([^;]*);*(\d\d\d\d-\d\d-\d\d);*.*$/;
 		# some series are missing dates
 		if (!$date) {
 			$date = "TBA";

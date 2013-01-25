@@ -157,7 +157,7 @@ sub geteplist_thetvdb ($) {
 		#;;;1 - 1;;;;Hairy Maclary from Donaldson's Dairy;;;;;; &nbsp;;;
 		#;;;1 - 1;;;;The First Time;;;2012-01-09;;; &nbsp;;;
 		
-		($se,$ep,$epname,$date) = $line =~ /;*(\d+) - (\d+);*([^;]*);*(\d\d\d\d-\d\d-\d\d);*.*$/;
+		($se,$ep,$epname,$date) = $line =~ /;*(\d+) [-x] (\d+);*([^;]*);*(\d\d\d\d-\d\d-\d\d);*.*$/;
 	# some series are missing dates
 		if (!$date) {
 			$date = "TBA";
@@ -209,7 +209,7 @@ sub get_movie_meta ($) {
 	
 	my ($n) = @_;
 	
-	foreach (`mplayer -benchmark -ao null -vo null -identify -frames 0 "$n"`) {
+	foreach (`/opt/local/bin/mplayer -benchmark -ao null -vo null -identify -frames 0 "$n"`) {
 		chop;
 		
 		if (/^ID_DEMUXER/) { ($ext) = /=(.*)/; }
