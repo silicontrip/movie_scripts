@@ -16,15 +16,16 @@ sub new
 	if (opendir($sdh,$self->{_targetDir}) ) {
 		while($episode=readdir $sdh) {
 			if (!($episode =~ /^\./)) {
-				#print "$targetdir / $episode\n";
-				if ( -d "$targetdir/$episode") {
-					#print "$episode\n";
+				$target = $self->{_targetDir} . "/" . $episode;
+
+				if ( -d $target) {
 					
 					$epregex = $episode;
-					$epregex =~ s/([a-z])([A-Z])/$1.*$2/g;
-					$epregex =~ s/([a-zA-Z])([0-9])/$1.*$2/g;
-					$epregex =~ s/([0-9])([a-zA-Z])/$1.*$2/g;
-					$epregex =~ s/([A-Z])([A-Z])/$1.*$2/g;
+					$epregex =~ s/([a-z])([A-Z])/$1\\W*$2/g;
+					$epregex =~ s/([a-zA-Z])([0-9])/$1\\W*$2/g;
+					$epregex =~ s/([0-9])([a-zA-Z])/$1\\W*$2/g;
+					$epregex =~ s/([A-Z])([A-Z])/$1\\W*$2/g;
+					$epregex =~ s/_/\\W*/g;
 					
 					$epregexlist{$episode} = $epregex;
 					
@@ -95,7 +96,10 @@ sub seriesName {
 	
 	for $series (keys(%{$self->{_epRegex}})) {
 		$regex = $self->{_epRegex}{$series};
-		if ($filename =~/$regex/i) {
+
+		
+		if ($filename =~ /$regex/i) {
+			
 			if (length($series)>length($found))
 			{
 				$found = $series;
