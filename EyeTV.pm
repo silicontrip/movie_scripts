@@ -252,10 +252,10 @@ sub parseRepeats($) {
 		
 		if ($weekparse{$n}) {
 			# how to determine this at runtime.
-			# old
-			push(@packrpts,'   ' . pack('C',$weekparse{$n}));
-			#new 
-			#push(@packrpts,$n);
+			# old v2.0
+			#push(@packrpts,'   ' . pack('C',$weekparse{$n}));
+			#new v3.0
+			push(@packrpts,$n);
 		}
 	}
 	
@@ -501,11 +501,12 @@ sub export ($$$) {
 	
 	my $id = $self->{_uniqueID};
 	
-	my $q = "Esrc:'obj '{want:type(cRec), from:null(), form:enum('ID  '), seld:long(" . $id . ")}, Etgt:utxt(\"" . $path . "\"), Etyp:enum('" . $type . "'), Repl:bool(false), Opng:bool(false)"; 
+	my $q = "Esrc:'obj '{want:type(cRec), from:null(), form:enum('ID  '), seld:long(" . $id . ")}, Etgt:utxt(\"" . $path . "\"), Etyp:enum('" . $type . "'), Repl:bool(true), Opng:bool(false)"; 
 	
 	my $evt= build_event(qw/EyTV Expo EyTV/,$q);
 	my $res =$evt->send_event(kAEWaitReply); 
 	
+	print AEPrint ($res->{REP}) . "\n";
 }
 
 sub remove {

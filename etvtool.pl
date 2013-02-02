@@ -21,7 +21,9 @@ $result = GetOptions ("export" => \$action_export,
 "enable|E" => \$set_enabled,
 "disable|D" => \$set_disabled,
 "help|h" => \$get_help,
-"yes|Y" => \$i_am_sure
+"yes|Y" => \$i_am_sure,
+"recordings|R" => \$recordings_only,
+"programs|P" => \$programs_only
 );
 
 if ($get_help) {
@@ -39,6 +41,8 @@ if ($get_help) {
 	print "-t --title <title> Select matching sub string\n";
 	print "-i --id <id>       Select matching id.  id can be a range eg 1234-1245\n";
 	print "-Y --yes           Allow actions on every program and recording\n";
+	print "-R --recordings    Select only recordings\n";
+	print "-P --programs      Select only programs\n";
 	print "\nSet program data:\n";
 	print "-s --start <YYYY-MM-DD HH:MM:SS> Set start time of a program\n";
 	print "-u --settitle <title>            Set the title of a program or recording\n";
@@ -52,14 +56,9 @@ if ($get_help) {
 
 
 if ($action_create) {
-	
-	
 	$match_id = EyeTV::createProgram($set_title,$set_channel,$set_start,$set_duration);
 	print "CREATE program: $match_id\n";
-	
 	#($set_title,$set_channel,$set_start,$set_duration) = ();
-	
-	
 }
 
 # going to early exit for "unsafe" operations
@@ -70,6 +69,7 @@ if (((!$match_id) && (!$match_title)) && ($action_export || $action_remove || $s
 	exit;
 }
 
+if (!$programs_only) {
 print "### RECORDINGS ###\n\n";
 
 my @list = EyeTV::getRecordings();
@@ -92,16 +92,24 @@ for my $id (sort(@list)) {
 		if ($action_export) {
 			my $dir = getcwd;
 			my $file = $title;
+
+			# for EyeTV 2.0
+			my $pathseperator = ":";
+			# for EyeTV 3.0
+			my $pathseperator = "/";
 			
 			my $da = $rec->getStartAsString();
 			
 			($dt, $tm) = split(' ',$da);
 			
-			$dir =~ s/\//:/g;
+			if ($pathseperator ne "/") {
+				$dir =~ s/\//:/g;
+			}
 			$file =~ s/\s+/_/g;
 			$file =~ s/:/_/g;
 			
-			my $path= "$dir:${file}_${dt}_$id.mpg";
+			my $path= "${dir}${pathseperator}${file}_${dt}_$id.mpg";
+			#my $path= "${file}_${dt}_$id.mpg";
 
 			print "$path\n";
 			
@@ -122,7 +130,9 @@ for my $id (sort(@list)) {
 	} 
 	
 }
+}
 
+if (!$recordings_only) {
 my @prglist = EyeTV::getPrograms();
 
 print "\n### PROGRAMS ###\n\n";
@@ -176,3 +186,4 @@ for my $id (sort(@prglist)) {
 	}
 	
 }	
+}
