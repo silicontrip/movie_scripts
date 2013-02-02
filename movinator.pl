@@ -79,8 +79,9 @@ sub get_genre ($) {
 		chomp($line);
 
                 if ($line =~ /\/genre\//) {
-                        ($genre) = $line =~ /href=\"\/genre\/([^"]*)\"/; #"
-		#	print "$genre\n";
+			#print "$line\n";
+                        ($genre) = $line =~ /href=\"\/genre\/([^\?]*)?/; #"
+			#print "$genre\n";
 			$genrelist{$genre} = 1;
 		}
 
