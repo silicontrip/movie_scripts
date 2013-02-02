@@ -20,13 +20,18 @@ sub new
 sub seriesNumber {
 	my ( $self, $seriesNumber ) = @_;
     $self->{_seNumber} = $seriesNumber if defined($seriesNumber);
-    return $self->{_seNumber};
+	
+	$seNumber = sprintf("%02d",$self->{_seNumber});
+	
+    return $seNumber;
 }
 
 sub episodeNumber {
 	my ( $self, $episodeNumber ) = @_;
     $self->{_epNumber} = $episodeNumber if defined($episodeNumber);
-    return $self->{_epNumber};
+	$epNumber = sprintf("%02d",$self->{_epNumber});
+	
+    return $epNumber;
 }
 
 sub seriesName {
