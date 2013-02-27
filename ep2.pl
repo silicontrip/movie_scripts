@@ -17,7 +17,7 @@ $result = GetOptions ("no-rename|t" => \$test,
 if (!$cdn) { $cdn = "/Volumes/Drobo/TVSeries"; } # should make this a config file option
 
 $epfac = new EpisodeFactory($cdn);
-$eplfac = new EpisodeListFactory($cdn);
+$eplfac = new EpisodeListFactory($cdn,"/Volumes/Drobo/bin/metadata-example");
 
 
 
@@ -30,7 +30,14 @@ while ($filename = shift) {
 	$episode->episodeNumber($episodeNumber);
 
 	print "Initialising Series data\n";
-	$eplfac->initWithName($episode->seriesName());
+	if ($id) { 
+		$eplfac->initWithTVDBId($id); 
+	} elsif ($name) {
+			$eplfac->initWithName($name);
+	} else {
+		$eplfac->initWithName($episode->seriesName());
+	}	
+	
 	print "Initialising AVmeta data\n";
 	$meta = new AVMeta($filename);
 

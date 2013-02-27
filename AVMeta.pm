@@ -7,12 +7,46 @@ sub new
 	
 	my $self = { 
 		_fileName => shift,
-		_meta => undef
+		_meta => undef,
+		_metaExe => shift
 	};
 
 	my %avmeta;
 	
-	foreach (`/opt/local/bin/mplayer -benchmark -ao null -vo null -identify -frames 0 "$self->{_fileName}"`) {
+	# New metadata gatherer.
+#major_brand=isom
+#minor_version=1
+#compatible_brands=isomavc1
+#creation_time=2012-11-17 05:16:47
+#FORMAT_NAME=mp4
+#STREAMS=2
+#STREAM_0_TYPE=VIDEO
+#STREAM_VIDEO_CODEC_ID=H264
+#STREAM_VIDEO_AFPS_RATIO=25:1
+#STREAM_VIDEO_FPS_RATIO=25:1
+#STREAM_VIDEO_FPS=25.000000
+#STREAM_VIDEO_WIDTH=720
+#STREAM_VIDEO_HEIGHT=404
+#STREAM_VIDEO_PIX_FMT=yuv420p
+#STREAM_VIDEO_SAR=0:1
+#STREAM_VIDEO_REFFRAMES=5
+#STREAM_VIDEO_COLORSPACE=bt709
+#STREAM_VIDEO_COLORRANGE=mpeg
+#STREAM_VIDEO_FIELDORDER=UNKNOWN
+#STREAM_VIDEO_creation_time=2012-11-17 05:16:47
+#STREAM_VIDEO_language=und
+#STREAM_VIDEO_handler_name=Video
+#STREAM_1_TYPE=AUDIO
+#STREAM_AUDIO_CODEC_ID=AAC
+#STREAM_AUDIO_SAMPLERATE=48000
+#STREAM_AUDIO_CHANNELS=2
+#STREAM_AUDIO_SAMPLEFORMAT=fltp
+#STREAM_AUDIO_creation_time=2012-11-17 05:17:38
+#STREAM_AUDIO_language=eng
+#STREAM_AUDIO_handler_name=GPAC ISO Audio Handler
+
+# need to make this program location settable.
+	foreach (`$self->{_metaExe} "$self->{_fileName}"`) {
 		chop;
 		#print "$_";
 		
@@ -62,7 +96,7 @@ sub getCodec
 {
 	my ( $self, $key ) = @_;
 	$codec = $self->{_meta}{$key};
-	$codec =~ s/^ff//;
+#	$codec =~ s/^ff//;
 	return $codec;
 }
 
@@ -79,6 +113,12 @@ sub getAudioString
 	return  $self->getCodec('ID_AUDIO_CODEC') . "-" . $self->getHumanReadable('ID_AUDIO_RATE');
 }
 
+sub metaExe {
+	my ( $self, $exe ) = @_;
+    $self->{_metaExe} = $exe if defined($exe);
+	
+    return $self->{_metaExe};
+}
 
 
 1;
