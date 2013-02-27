@@ -20,7 +20,7 @@ $result = GetOptions (
 if (!$cdn) { $cdn = "/Volumes/Drobo/TVSeries"; } # should make this a config file option
 
 $epfac = new EpisodeFactory($cdn);
-$eplfac = new EpisodeListFactory($cdn,"/Volumes/Drobo/bin/metadata-example");
+$eplfac = new EpisodeListFactory($cdn);
 
 
 
@@ -42,7 +42,7 @@ while ($filename = shift) {
 	}	
 	
 	print "Initialising AVmeta data\n";
-	$meta = new AVMeta($filename);
+	$meta = new AVMeta($filename,"/Volumes/Drobo/bin/metadata-example");
 
 	#$meta->printKeys();
 	
