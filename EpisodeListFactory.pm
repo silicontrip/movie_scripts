@@ -17,7 +17,7 @@ sub new
 
 	
 	bless $self, $class;
-    return $self;
+	return $self;
 
 }	
 
@@ -97,7 +97,7 @@ sub initWithTVDBId
 		
 		$self->{_db}->{$name} = $episodeList;
 		
-	}
+#	}
 	
 
 }

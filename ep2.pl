@@ -1,5 +1,7 @@
 #!/usr/bin/perl
 
+use Getopt::Long;
+
 use EpisodeFactory;
 use EpisodeListFactory;
 use AVMeta;
@@ -61,19 +63,19 @@ while ($filename = shift) {
 		$meta->getVideoString() . "." . 
 		$meta->getAudioString() . "\n";
 
-			print "$filename -> $newName\n"
+	print "$filename -> $newName\n";
 
 
-if ($test) {
-	;
-}	else {
-	if ($move) {
-		# rename to $cdn  $episode->seriesName() S$episode->seriesNumber()\n";
-		print "$cdn/
+	if ($test) {
+		;
 	} else {
-		# rename in same directory
+		if ($move) {
+			# rename to $cdn 
+			print "$cdn/ $episode->seriesName() S$episode->seriesNumber()\n";
+		} else {
+			# rename in same directory
+		}
 	}
-}
 	
 }
 
