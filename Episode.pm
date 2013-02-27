@@ -34,6 +34,12 @@ sub episodeNumber {
     return $epNumber;
 }
 
+sub seNumber {
+
+	my ( $self ) = @_;
+    return "s" . $self->seriesNumber() . "e" . $self->episodeNumber()
+}
+
 sub seriesName {
 	my ( $self, $seriesName ) = @_;
     $self->{_seName} = $seriesName if defined($seriesName);
