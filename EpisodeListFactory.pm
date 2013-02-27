@@ -110,6 +110,7 @@ sub initWithName
 
 	# check series isn't populated
 	
+	#print "Init with Name: $name\n";
 	
 	if (!defined($self->{_db}->{$name})) {
 
@@ -124,11 +125,11 @@ sub initWithName
 		if ( -r "$targetdir/$name/.id") 
 		{
 			open (ID,"$targetdir/$name/.id") ;
-			#print "Reading ID\n";
 			$id=<ID>;
 			close ID;
 		
 			chop($id);
+			#print "Read ID $id\n";
 		} else {
 		
 			my $sname;
@@ -187,7 +188,7 @@ sub getName {
 
 	$search = "${se};${ep}";
 
-#	print "$search\n";
+	#print "$search\n";
 		
 	return $self->{_db}->{$name}->{$search};
 	
