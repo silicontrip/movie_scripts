@@ -61,7 +61,8 @@ while ($filename = shift) {
 		$episode->seNumber() . "." . 
 		$eplfac->getName($episode->seriesName(),$episode->seriesNumber(),$episode->episodeNumber()) . "." . 
 		$meta->getVideoString() . "." . 
-		$meta->getAudioString() . "\n";
+		$meta->getAudioString() . "." .
+		$meta->getExtension() .  "\n";
 
 	print "$filename -> $newName\n";
 
