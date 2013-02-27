@@ -26,13 +26,13 @@ $eplfac = new EpisodeListFactory($cdn);
 
 while ($filename = shift) {
 
-	print "Initialising Episode data\n";
+#	print "Initialising Episode data\n";
 	$episode = $epfac->episode($filename);
 
 	$episode->seriesNumber($seriesNumber);
 	$episode->episodeNumber($episodeNumber);
 
-	print "Initialising Series data\n";
+#	print "Initialising Series data\n";
 	if ($id) { 
 		$eplfac->initWithTVDBId($id); 
 	} elsif ($name) {
@@ -41,13 +41,13 @@ while ($filename = shift) {
 		$eplfac->initWithName($episode->seriesName());
 	}	
 	
-	print "Initialising AVmeta data\n";
+#	print "Initialising AVmeta data\n";
 	$meta = new AVMeta($filename,"/Volumes/Drobo/bin/metadata-example");
 
 	#$meta->printKeys();
 	
 	
-	print "$filename: " . $meta->get('ID_DEMUXER') . "\n"; 
+#	print "$filename: " . $meta->get('ID_DEMUXER') . "\n"; 
 	#print "series: " . $episode->seriesNumber() . "\n";
 	#print "episode: " . $episode->episodeNumber() . "\n";
 	#print "Series Name: " . $episode->seriesName() . "\n";
@@ -66,18 +66,22 @@ while ($filename = shift) {
 		}
 		$newName .= $meta->getVideoString() . "." . $meta->getAudioString() . "." . $meta->getExtension();
 
-	print "$filename -> $newName\n";
 
 
-	if ($test) {
-		;
+	if ($move) {
+		# rename to $cdn 
+		$dir = $cdn . "/" .  $episode->seriesName() . "/S" . $episode->seriesNumber();
 	} else {
-		if ($move) {
-			# rename to $cdn 
-			print "$cdn/ $episode->seriesName() S$episode->seriesNumber()\n";
-		} else {
-			# rename in same directory
-		}
+		# basename
+		$dir = $filename;
+		$dir =~ s/[^\/]*$//;
+	}
+
+		$newPath = $dir . "/" . $newName;
+		print "$filename -> ";
+		print "$newPath\n"; 
+	if (!$test) {
+		rename $filename , $newPath;
 	}
 	
 }
