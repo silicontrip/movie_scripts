@@ -93,7 +93,7 @@ sub getHumanReadable
 sub getCodec
 {
 	my ( $self, $key ) = @_;
-	$codec = $self->{_meta}{$key};
+	$codec = lc($self->{_meta}{$key});
 #	$codec =~ s/^ff//;
 	return $codec;
 }

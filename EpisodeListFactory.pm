@@ -70,7 +70,7 @@ sub initWithTVDBId
 			# some series are missing dates
 			if (!$date) {
 				$date = "TBA";
-				($se,$ep,$epname) = $line =~ /;*(\d+) - (\d+);*([^;]*);*.*$/;
+				($se,$ep,$epname) = $line =~ /;*(\d+) [-x] (\d+);*([^;]*);*;*.*$/;
 			}
 				
 				
