@@ -62,20 +62,23 @@ while (my $filename = shift) {
 	if ($dir)  {
 		$newPath = $dir . "/";
 	}
-	$newPath .= $newName;
+	if (-d $newPath) {
+		$newPath .= $newName;
 
-	print "$filename -> ";
-	print "$newPath\n"; 
+		print "$filename -> ";
+		print "$newPath\n"; 
 
-	#print "test ($test)\n";
+		#print "test ($test)\n";
 
-	if ($test ne 1) {
-		if (! -r $newPath) {
-			rename $filename , $newPath;
-		} else {
-			print "exists\n";
+		if ($test ne 1) {
+			if (! -r $newPath) {
+				rename $filename , $newPath;
+			} else {
+				print "exists\n";
+			}
 		}
+	} else {
+		print "UNKNOWN $filename\n";
 	}
-	
 }
 
