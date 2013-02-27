@@ -5,7 +5,8 @@ use EpisodeListFactory;
 use AVMeta;
 
 
-$result = GetOptions ("no-rename|t" => \$test, 
+$result = GetOptions (
+	"no-rename|t" => \$test, 
 	"name|N=s" => \$name, 
 	"move|m" => \$move, 
 	"tvdb|i=s" => \$id,
@@ -54,12 +55,25 @@ while ($filename = shift) {
 	#print $meta->getAudioString() . "\n";
 	
 	
-	print $episode->seriesName() . "-" . "s" . $episode->seriesNumber() . "e" . $episode->episodeNumber() . "." . $eplfac->getName($episode->seriesName(),$episode->seriesNumber(),$episode->episodeNumber()) . "." . $meta->getVideoString() . "." . $meta->getAudioString() . "\n";
+	$newName =  $episode->seriesName() . "-" . 
+		$episode->seNumber() . "." . 
+		$eplfac->getName($episode->seriesName(),$episode->seriesNumber(),$episode->episodeNumber()) . "." . 
+		$meta->getVideoString() . "." . 
+		$meta->getAudioString() . "\n";
 
-	#$eplfac->initWithName($episode->seriesName());
+			print "$filename -> $newName\n"
 
-	#print $eplfac->getName($episode->seriesName(),$episode->seriesNumber(),$episode->episodeNumber()) . "\n";
-	
+
+if ($test) {
+	;
+}	else {
+	if ($move) {
+		# rename to $cdn  $episode->seriesName() S$episode->seriesNumber()\n";
+		print "$cdn/
+	} else {
+		# rename in same directory
+	}
+}
 	
 }
 
