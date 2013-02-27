@@ -7,9 +7,11 @@ use EpisodeListFactory;
 use AVMeta;
 
 
-$result = GetOptions (
+my $test,$seriesName,$move,$id,$seriesNumber,$episodeNumber,$cdn;
+
+GetOptions (
 	"no-rename|t" => \$test, 
-	"name|N=s" => \$name, 
+	"name|n=s" => \$seriesName, 
 	"move|m" => \$move, 
 	"tvdb|i=s" => \$id,
 	"series|s=s" => \$seriesNumber,
@@ -23,7 +25,6 @@ $epfac = new EpisodeFactory($cdn);
 $eplfac = new EpisodeListFactory($cdn);
 
 
-
 while ($filename = shift) {
 
 #	print "Initialising Episode data\n";
@@ -31,12 +32,11 @@ while ($filename = shift) {
 
 	$episode->seriesNumber($seriesNumber);
 	$episode->episodeNumber($episodeNumber);
+	$episode->seriesName($seriesName);
 
 #	print "Initialising Series data\n";
 	if ($id) { 
 		$eplfac->initWithTVDBId($id); 
-	} elsif ($name) {
-			$eplfac->initWithName($name);
 	} else {
 		$eplfac->initWithName($episode->seriesName());
 	}	
@@ -68,6 +68,8 @@ while ($filename = shift) {
 
 
 
+	my $dir,$newPath;
+
 	if ($move) {
 		# rename to $cdn 
 		$dir = $cdn . "/" .  $episode->seriesName() . "/S" . $episode->seriesNumber();
@@ -77,7 +79,10 @@ while ($filename = shift) {
 		$dir =~ s/[^\/]*$//;
 	}
 
-		$newPath = $dir . "/" . $newName;
+		if ($dir)  {
+			$newPath = $dir . "/";
+		}
+		$newPath .= $newName;
 		print "$filename -> ";
 		print "$newPath\n"; 
 	if (!$test) {
