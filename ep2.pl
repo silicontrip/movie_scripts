@@ -57,11 +57,14 @@ while ($filename = shift) {
 	#print $meta->getAudioString() . "\n";
 	
 	
-	$newName =  $episode->seriesName() . "-" . 
-		$episode->seNumber() . "." . 
-		$eplfac->getName($episode->seriesName(),$episode->seriesNumber(),$episode->episodeNumber()) . "." . 
-		$meta->getVideoString() . "." . 
-		$meta->getAudioString() . "\n";
+	$newName =  $episode->seriesName() . "-" . $episode->seNumber() . "." ;
+
+	$epName = $eplfac->getName($episode->seriesName(),$episode->seriesNumber(),$episode->episodeNumber());
+
+		if ($epName) {
+			$newName .=  $epName . "." ;
+		}
+		$newName .= $meta->getVideoString() . "." . $meta->getAudioString();
 
 	print "$filename -> $newName\n";
 
