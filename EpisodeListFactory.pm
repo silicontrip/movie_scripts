@@ -21,6 +21,88 @@ sub new
 
 }	
 
+sub initWithTVDBId
+{
+	my ( $self, $id ) = @_;
+
+	# check series isn't populated
+	
+	
+#	if (!defined($self->{_db}->{$name})) {
+
+		my $episodeList = {};
+
+		
+		# check for local list
+		# determine id
+		
+		my $id;
+		my $targetdir = $self->{_targetDir};
+		local $/=undef;
+	
+		if ($id) {
+			
+			my $url = "http://thetvdb.com";
+			my $episodes = get("$url/?id=$id&tab=seasonall");
+			my @lines = split /\n/, $episodes;
+			my $title;
+			
+			foreach my $line (@lines) {
+				
+				chomp($line);
+				
+				if ($line =~ /\<h1>/) {
+					($title) = $line =~ /\">([^<]*)\<\/a>/; #"
+					$title =~ s/[^a-zA-Z10-9]//g;
+					# $episodeList{'title'} = $title;
+					#print "TITLE: $title\n";
+				}
+				
+				$line =~ s/<[^>]*>/;/g;
+				
+				#print "$line\n";
+				
+				#;;;1 - 1;;;;Hairy Maclary from Donaldson's Dairy;;;;;; &nbsp;;;
+				#;;;1 - 1;;;;The First Time;;;2012-01-09;;; &nbsp;;;
+				
+				($se,$ep,$epname,$date) = $line =~ /;*(\d+) [-x] (\d+);*([^;]*);*(\d\d\d\d-\d\d-\d\d);*.*$/;
+				# some series are missing dates
+				if (!$date) {
+					$date = "TBA";
+					($se,$ep,$epname) = $line =~ /;*(\d+) - (\d+);*([^;]*);*.*$/;
+				}
+				
+				
+				#$ep = sprintf "%02d", $ep;
+				#$se = sprintf "%02d", $se;
+				
+				if ($date) {
+					$epname =~ s/\'//g;
+					$epname =~ s/[^a-zA-Z10-9]/_/g;
+					$epname =~ s/__*/_/g;
+					$epname =~ s/^_//;
+					$epname =~ s/_$//;
+					# maybe cache this in a DB.
+					$se = $se + 0;
+					$ep = $ep + 0;
+					if ($se && $ep) {
+						$episodeList->{"${se};${ep}"}=$epname;
+						#print "s${se}e$ep-$epname\n";
+					}
+				}
+				
+			}
+			
+		}
+		
+		$self->{_db}->{$name} = $episodeList;
+		
+	}
+	
+
+}
+
+
 sub initWithName
 {
 	my ( $self, $name ) = @_;
@@ -31,7 +113,6 @@ sub initWithName
 	if (!defined($self->{_db}->{$name})) {
 
 		my $episodeList = {};
-
 		
 		# check for local list
 		# determine id
@@ -90,62 +171,8 @@ sub initWithName
 			
 		}
 		if ($id) {
-			
-			my $url = "http://thetvdb.com";
-			my $episodes = get("$url/?id=$id&tab=seasonall");
-			my @lines = split /\n/, $episodes;
-			my $title;
-			
-			foreach my $line (@lines) {
-				
-				chomp($line);
-				
-				if ($line =~ /\<h1>/) {
-					($title) = $line =~ /\">([^<]*)\<\/a>/; #"
-					$title =~ s/[^a-zA-Z10-9]//g;
-					# $episodeList{'title'} = $title;
-					#print "TITLE: $title\n";
-				}
-				
-				$line =~ s/<[^>]*>/;/g;
-				
-				#print "$line\n";
-				
-				#;;;1 - 1;;;;Hairy Maclary from Donaldson's Dairy;;;;;; &nbsp;;;
-				#;;;1 - 1;;;;The First Time;;;2012-01-09;;; &nbsp;;;
-				
-				($se,$ep,$epname,$date) = $line =~ /;*(\d+) [-x] (\d+);*([^;]*);*(\d\d\d\d-\d\d-\d\d);*.*$/;
-				# some series are missing dates
-				if (!$date) {
-					$date = "TBA";
-					($se,$ep,$epname) = $line =~ /;*(\d+) - (\d+);*([^;]*);*.*$/;
-				}
-				
-				
-				#$ep = sprintf "%02d", $ep;
-				#$se = sprintf "%02d", $se;
-				
-				if ($date) {
-					$epname =~ s/\'//g;
-					$epname =~ s/[^a-zA-Z10-9]/_/g;
-					$epname =~ s/__*/_/g;
-					$epname =~ s/^_//;
-					$epname =~ s/_$//;
-					# maybe cache this in a DB.
-					$se = $se + 0;
-					$ep = $ep + 0;
-					if ($se && $ep) {
-						$episodeList->{"${se};${ep}"}=$epname;
-						#print "s${se}e$ep-$epname\n";
-					}
-				}
-				
-			}
-			
-		}
-		
-		$self->{_db}->{$name} = $episodeList;
-		
+			$self->initWithTVDBId($id);
+		}	
 	}
 	
 
