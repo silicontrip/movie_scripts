@@ -103,14 +103,14 @@ sub getCodec
 sub getVideoString 
 {
 	my ($self) = @_;
-	return  $self->getCodec('ID_VIDEO_CODEC') . "-" . $self->get('ID_VIDEO_WIDTH') . "x" . $self->get('ID_VIDEO_HEIGHT') . "x". $self->getRounded('ID_VIDEO_FPS');
+	return  $self->getCodec('STREAM_VIDEO_CODEC_ID') . "-" . $self->get('STREAM_VIDEO_WIDTH') . "x" . $self->get('STREAM_VIDEO_HEIGHT') . "x". $self->getRounded('STREAM_VIDEO_FPS');
 
 }
 
 sub getAudioString 
 {
 	my ($self) = @_;
-	return  $self->getCodec('ID_AUDIO_CODEC') . "-" . $self->getHumanReadable('ID_AUDIO_RATE');
+	return  $self->getCodec('STREAM_AUDIO_CODEC_ID') . "-" . $self->getHumanReadable('STREAM_AUDIO_SAMPLERATE');
 }
 
 sub metaExe {
