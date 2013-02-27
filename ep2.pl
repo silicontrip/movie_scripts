@@ -64,7 +64,7 @@ while ($filename = shift) {
 		if ($epName) {
 			$newName .=  $epName . "." ;
 		}
-		$newName .= $meta->getVideoString() . "." . $meta->getAudioString();
+		$newName .= $meta->getVideoString() . "." . $meta->getAudioString() . "." . $meta->getExtension();
 
 	print "$filename -> $newName\n";
 

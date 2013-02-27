@@ -50,11 +50,9 @@ sub new
 		chop;
 		#print "$_";
 		
-		if (/^ID_/) {
 			my ($key,$value) = split(/=/);
 			$avmeta{$key} = $value;
 			#	print "$key <=> $value\n";
-		}
 	}
 	
 	$self->{_meta} = \%avmeta;
@@ -111,6 +109,12 @@ sub getAudioString
 {
 	my ($self) = @_;
 	return  $self->getCodec('STREAM_AUDIO_CODEC_ID') . "-" . $self->getHumanReadable('STREAM_AUDIO_SAMPLERATE');
+}
+
+sub getExtension
+{
+	my ($self) = @_;
+	return $self->get('FORMAT_NAME');
 }
 
 sub metaExe {
