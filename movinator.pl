@@ -161,8 +161,8 @@ if (! -e $nn) {
 if (!$nomove) {
 for $g (@genre) {
 
-		if (! -d $g) {
-			mkdir $g;
+		if (! -d "$targetdir/$g") {
+			mkdir "$targetdir/$g";
 		}
 		
 		printf "link $nn to $g/\n";

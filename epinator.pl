@@ -209,26 +209,59 @@ sub get_movie_meta ($) {
 	
 	my ($n) = @_;
 	
-	foreach (`/opt/local/bin/mplayer -benchmark -ao null -vo null -identify -frames 0 "$n"`) {
+	foreach (`/Volumes/Drobo/bin/metadata-example "$n"`) {
 		chop;
+
+#major_brand=isom
+#minor_version=1
+#compatible_brands=isomavc1
+#creation_time=2012-11-17 05:16:47
+#FORMAT_NAME=mp4
+#STREAMS=2
+#STREAM_0_TYPE=VIDEO
+#STREAM_VIDEO_CODEC_ID=H264
+#STREAM_VIDEO_AFPS_RATIO=25:1
+#STREAM_VIDEO_FPS_RATIO=25:1
+#STREAM_VIDEO_FPS=25.000000
+#STREAM_VIDEO_WIDTH=720
+#STREAM_VIDEO_HEIGHT=404
+#STREAM_VIDEO_PIX_FMT=yuv420p
+#STREAM_VIDEO_SAR=0:1
+#STREAM_VIDEO_REFFRAMES=5
+#STREAM_VIDEO_COLORSPACE=bt709
+#STREAM_VIDEO_COLORRANGE=mpeg
+#STREAM_VIDEO_FIELDORDER=UNKNOWN
+#STREAM_VIDEO_creation_time=2012-11-17 05:16:47
+#STREAM_VIDEO_language=und
+#STREAM_VIDEO_handler_name=Video
+#STREAM_1_TYPE=AUDIO
+#STREAM_AUDIO_CODEC_ID=AAC
+#STREAM_AUDIO_SAMPLERATE=48000
+#STREAM_AUDIO_CHANNELS=2
+#STREAM_AUDIO_SAMPLEFORMAT=fltp
+#STREAM_AUDIO_creation_time=2012-11-17 05:17:38
+#STREAM_AUDIO_language=eng
+#STREAM_AUDIO_handler_name=GPAC ISO Audio Handler
+
 		
-		if (/^ID_DEMUXER/) { ($ext) = /=(.*)/; }
+		if (/^FORMAT_NAME/) { ($ext) = /=(.*)/; }
 		if ($ext =~ /^mpeg/) { $ext = "mpg"; }
 		# it's actually more than just mkv, but this is the most common I'm moving
 		if ($ext =~ /^lavfpref/) { $ext = "mkv"; }
-		if (/^ID_VIDEO_FORMAT/) { ($vcodec) =  /=(.*)/; } 
-		if ($arch eq "powerpc") { $vcodec = reverse $vcodec; }
+		if (/^STREAM_VIDEO_CODEC_ID/) { ($vcodec) =  /=(.*)/; } 
+		#if ($arch eq "powerpc") { $vcodec = reverse $vcodec; }
 		
 		if ($vcodec eq "10000001x0") { $vcodec = "mpeg1"; }
 		if ($vcodec eq "20000001x0") { $vcodec = "mpeg2"; }
 		
-		if (/^ID_VIDEO_WIDTH/) { ($width) = /=(.*)/; }
-		if (/^ID_VIDEO_HEIGHT/) { ($height) = /=(.*)/; }
-		if (/^ID_VIDEO_FPS/) { ($fps) = /=(.*)/; }
-		if (/^ID_AUDIO_RATE/) { ($arate) = /=(.*)/; }
-		if (/^ID_AUDIO_CODEC/) { ($acodec) = /=(.*)/; }
-		
-		if ($acodec eq "faad") { $acodec = "aac"; }
+		if (/^STREAM_VIDEO_WIDTH/) { ($width) = /=(.*)/; }
+		if (/^STREAM_VIDEO_HEIGHT/) { ($height) = /=(.*)/; }
+		if (/^STREAM_VIDEO_FPS/) { ($fps) = /=(.*)/; }
+		if (/^STREAM_AUDIO_SAMPLERATE/) { ($arate) = /=(.*)/; }
+		if (/^STREAM_AUDIO_CODEC_ID/) { ($acodec) = /=(.*)/; }
+
+		$vcodec = lc($vcodec);
+		$acodec = lc($acodec);
 	}
 	$fps = int($fps + 0.5);
 	$arate =~ s/000$/k/;
