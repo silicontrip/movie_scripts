@@ -21,54 +21,34 @@ GetOptions (
 
 if (!$cdn) { $cdn = "/Volumes/Drobo/TVSeries"; } # should make this a config file option
 
-$epfac = new EpisodeFactory($cdn);
-$eplfac = new EpisodeListFactory($cdn);
+my $epfac = new EpisodeFactory($cdn);
+my $eplfac = new EpisodeListFactory($cdn);
 
 
-while ($filename = shift) {
+while (my $filename = shift) {
 
-#	print "Initialising Episode data\n";
-	$episode = $epfac->episode($filename);
+	my $episode = $epfac->episode($filename);
 
 	$episode->seriesNumber($seriesNumber);
 	$episode->episodeNumber($episodeNumber);
 	$episode->seriesName($seriesName);
 
-#	print "Initialising Series data\n";
 	if ($id) { 
 		$eplfac->initWithTVDBId($id); 
 	} else {
 		$eplfac->initWithName($episode->seriesName());
 	}	
 	
-#	print "Initialising AVmeta data\n";
-	$meta = new AVMeta($filename,"/Volumes/Drobo/bin/metadata-example");
+	my $meta = new AVMeta($filename,"/Volumes/Drobo/bin/metadata-example"); # should make this a config option.
+	my $newName =  $episode->seriesName() . "-" . $episode->seNumber() . "." ;
+	my $epName = $eplfac->getName($episode->seriesName(),$episode->seriesNumber(),$episode->episodeNumber());
 
-	#$meta->printKeys();
-	
-	
-#	print "$filename: " . $meta->get('ID_DEMUXER') . "\n"; 
-	#print "series: " . $episode->seriesNumber() . "\n";
-	#print "episode: " . $episode->episodeNumber() . "\n";
-	#print "Series Name: " . $episode->seriesName() . "\n";
-	
-	
-	#	print $meta->getVideoString() . "\n";	
-	#print $meta->getAudioString() . "\n";
-	
-	
-	$newName =  $episode->seriesName() . "-" . $episode->seNumber() . "." ;
+	if ($epName) {
+		$newName .=  $epName . "." ;
+	}
+	$newName .= $meta->getVideoString() . "." . $meta->getAudioString() . "." . $meta->getExtension();
 
-	$epName = $eplfac->getName($episode->seriesName(),$episode->seriesNumber(),$episode->episodeNumber());
-
-		if ($epName) {
-			$newName .=  $epName . "." ;
-		}
-		$newName .= $meta->getVideoString() . "." . $meta->getAudioString() . "." . $meta->getExtension();
-
-
-
-	my $dir,$newPath;
+	my ($dir,$newPath) = ();
 
 	if ($move) {
 		# rename to $cdn 
@@ -79,14 +59,22 @@ while ($filename = shift) {
 		$dir =~ s/[^\/]*$//;
 	}
 
-		if ($dir)  {
-			$newPath = $dir . "/";
+	if ($dir)  {
+		$newPath = $dir . "/";
+	}
+	$newPath .= $newName;
+
+	print "$filename -> ";
+	print "$newPath\n"; 
+
+	#print "test ($test)\n";
+
+	if ($test ne 1) {
+		if (! -r $newPath) {
+			rename $filename , $newPath;
+		} else {
+			print "exists\n";
 		}
-		$newPath .= $newName;
-		print "$filename -> ";
-		print "$newPath\n"; 
-	if (!$test) {
-		rename $filename , $newPath;
 	}
 	
 }
