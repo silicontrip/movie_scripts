@@ -55,13 +55,16 @@ while (my $filename = shift) {
 		$dir = $cdn . "/" .  $episode->seriesName() . "/S" . $episode->seriesNumber();
 	} else {
 		# basename
-		$dir = $filename;
+		$dir =  $filename;
 		$dir =~ s/[^\/]*$//;
 	}
 
+	$newPath = "./";
 	if ($dir)  {
 		$newPath = $dir . "/";
 	}
+
+
 	if (-d $newPath) {
 		$newPath .= $newName;
 
