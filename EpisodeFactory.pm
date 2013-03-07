@@ -51,13 +51,13 @@ sub seriesNumber {
 	
 	if ($n =~ /[^\d](\d)(\d\d)[^\d]/)
 	{ $season = $1; $episode = $2; }
-	if ($n =~ /(\d?\d)[xe](\d\d?)/i) 
+	if ($n =~ /(\d?\d)[xe](\d\d+)/i) 
 	{ $season = $1; $episode = $2; }
-	if ($n =~ /S(\d?\d)[^\d]*E(\d\d?)/i)
+	if ($n =~ /S(\d?\d)[^\d]*E(\d\d+)/i)
 	{ $season = $1; $episode = $2; }
-	if ($n =~ /[^\d](\d?\d)[^\d](\d\d)[^\d]/i)
+	if ($n =~ /[^\d](\d?\d)[^\d](\d\d+)[^\d]/i)
 	{ $season = $1; $episode = $2; }
-	if ($n =~ /S(\d?\d)E(\d\d)/i)
+	if ($n =~ /S(\d?\d)E(\d\d+)/i)
 	{ $season = $1; $episode = $2; }
 
 	return $season;
@@ -72,16 +72,11 @@ sub episodeNumber {
 	$season ="";
 	$episode ="";
 	
-	if ($n =~ /[^\d](\d)(\d\d)[^\d]/)
-	{ $season = $1; $episode = $2; }
-	if ($n =~ /(\d?\d)[xe](\d\d?)/i) 
-	{ $season = $1; $episode = $2; }
-	if ($n =~ /S(\d?\d)[^\d]*E(\d\d?)/i)
-	{ $season = $1; $episode = $2; }
-	if ($n =~ /[^\d](\d?\d)[^\d](\d\d)[^\d]/i)
-	{ $season = $1; $episode = $2; }
-	if ($n =~ /S(\d?\d)E(\d\d)/i)
-	{ $season = $1; $episode = $2; }
+	if ($n =~ /[^\d](\d)(\d\d)[^\d]/) { $season = $1; $episode = $2; }
+	if ($n =~ /(\d?\d)[xe](\d\d+)/i) { $season = $1; $episode = $2; }
+	if ($n =~ /S(\d?\d)[^\d]*E(\d\d+)/i) { $season = $1; $episode = $2; }
+	if ($n =~ /[^\d](\d?\d)[^\d](\d\d+)[^\d]/i) { $season = $1; $episode = $2; }
+	if ($n =~ /S(\d?\d)E(\d\d+)/i) { $season = $1; $episode = $2; }
 	
 	return $episode;
 	
@@ -113,6 +108,11 @@ sub seriesName {
 
 sub episode {
 	my ( $self, $filename ) = @_;
+
+	$filename =~ s/_/./g;
+	$filename =~ s/720p//;
+	$filename =~ s/x264//;
+
 
 	my $seriesName = $self->seriesName($filename);
 	my $seriesNumber = $self->seriesNumber($filename);

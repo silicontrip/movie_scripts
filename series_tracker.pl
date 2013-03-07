@@ -239,7 +239,10 @@ sub find_series_thetvdb ($) {
 		($sname,$lang,$id) = $line =~ /^;;;([^;]*);*\s*;*([^;]*);*(\d+);*$/;
 		if ($sname) {
 			&tracker_print( "$sname - $lang - $id\n"); 
-			if ($oldid && $oldid != $id) { &tracker_print( "Multiple TVDB matches\n" ); $single = 0; }
+			if ($oldid && $oldid != $id) { 
+		#		&tracker_print( "Multiple TVDB matches\n" ); 
+				$single = 0; 
+			}
 			$oldid = $id;
 		}
 	}

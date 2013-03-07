@@ -21,7 +21,7 @@ sub seriesNumber {
 	my ( $self, $seriesNumber ) = @_;
     $self->{_seNumber} = $seriesNumber if defined($seriesNumber);
 	
-	$seNumber = sprintf("%02d",$self->{_seNumber});
+	$seNumber = sprintf("%02d",0 + $self->{_seNumber});
 	
     return $seNumber;
 }
@@ -29,7 +29,7 @@ sub seriesNumber {
 sub episodeNumber {
 	my ( $self, $episodeNumber ) = @_;
     $self->{_epNumber} = $episodeNumber if defined($episodeNumber);
-	$epNumber = sprintf("%02d",$self->{_epNumber});
+	$epNumber = sprintf("%02d",0 + $self->{_epNumber});
 	
     return $epNumber;
 }

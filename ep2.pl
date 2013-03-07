@@ -55,27 +55,33 @@ while (my $filename = shift) {
 		$dir = $cdn . "/" .  $episode->seriesName() . "/S" . $episode->seriesNumber();
 	} else {
 		# basename
-		$dir = $filename;
+		$dir =  $filename;
 		$dir =~ s/[^\/]*$//;
 	}
 
+	$newPath = "./";
 	if ($dir)  {
 		$newPath = $dir . "/";
 	}
-	$newPath .= $newName;
 
-	print "$filename -> ";
-	print "$newPath\n"; 
 
-	#print "test ($test)\n";
+	if (-d $newPath) {
+		$newPath .= $newName;
 
-	if ($test ne 1) {
-		if (! -r $newPath) {
-			rename $filename , $newPath;
-		} else {
-			print "exists\n";
+		print "$filename -> ";
+		print "$newPath\n"; 
+
+		#print "test ($test)\n";
+
+		if ($test ne 1) {
+			if (! -r $newPath) {
+				rename $filename , $newPath;
+			} else {
+				print "exists\n";
+			}
 		}
+	} else {
+		print "UNKNOWN $filename\n";
 	}
-	
 }
 
