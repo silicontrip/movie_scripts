@@ -531,7 +531,7 @@ sub export ($$$) {
 	my $evt= build_event(qw/EyTV Expo EyTV/,$q);
 	my $res =$evt->send_event(kAEWaitReply); 
 	
-	print AEPrint ($res->{REP}) . "\n";
+	#print AEPrint ($res->{REP}) . "\n";
     
     $self->setInteractionOn();
 
