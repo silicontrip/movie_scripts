@@ -9,11 +9,13 @@ sub new
 
 	my $self = { 
 		_targetDir => shift,
-		_db => undef
+		_db => undef,
+		_idMap => undef
 	};
 	
 
 	$self->{_db} = {};
+	$self->{_idMap} = {};
 
 	
 	bless $self, $class;
@@ -42,6 +44,7 @@ sub initWithTVDBId
 	
 	if ($id) {
 			
+	if (!defined($self->{_idMap}->{$id})) {
 		my $url = "http://thetvdb.com";
 		my $episodes = get("$url/?id=$id&tab=seasonall");
 		my @lines = split /\n/, $episodes;
@@ -88,7 +91,8 @@ sub initWithTVDBId
 				$ep = $ep + 0;
 				if ($se && $ep) {
 					$episodeList->{"${se};${ep}"}=$epname;
-					#print "${se};$ep = $epname\n";
+# DEBUG point for TheTVDB.com parsing errors.
+				#	print "${se};$ep = $epname\n";
 				}
 			}
 			
@@ -96,10 +100,13 @@ sub initWithTVDBId
 			
 		#print "SET $title\n";
 		$self->{_db}->{$title} = $episodeList;
+		$self->{_idMap}->{$id} = $title;
 		
+		return $title;	
+		}
+		return $self->{_idMap}->{$id};
 	}
 		
-	
 
 }
 
