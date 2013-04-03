@@ -84,9 +84,7 @@ sub getPrograms() {
 }
 
 sub getRecordings() {
-	
 	return getList(EyeTVRecording());
-
 }
 
 
@@ -495,10 +493,37 @@ sub matchID {
 	return ($fromID <= $id) && ($toID >= $id);
 }
 
+sub setInteraction ($$) {
+    my($self,$intr) = @_;
+    
+    my $evt = build_event(qw/core setd EyTV/, "'----':'obj '{ form:enum('prop'), want:type('prop'), seld:type('eInl'), 'from':null() }, data:enum('" . $intr . "')");
+
+    my $res =$evt->send_event(kAEWaitReply);
+	# print AEPrint ($res->{REP}) . "\n";
+
+}
+
+sub setInteractionOff ($) {
+    
+   	my($self) = @_;
+ 
+    $self->setInteraction("eNvr");
+}
+
+sub setInteractionOn ($) {
+    
+   	my($self) = @_;
+    
+    $self->setInteraction("eInA");
+}
+
+
 sub export ($$$) {
 	
 	my( $self, $path, $type ) = @_;
 	
+    $self->setInteractionOff();
+    
 	my $id = $self->{_uniqueID};
 	
 	my $q = "Esrc:'obj '{want:type(cRec), from:null(), form:enum('ID  '), seld:long(" . $id . ")}, Etgt:utxt(\"" . $path . "\"), Etyp:enum('" . $type . "'), Repl:bool(true), Opng:bool(false)"; 
@@ -507,6 +532,10 @@ sub export ($$$) {
 	my $res =$evt->send_event(kAEWaitReply); 
 	
 	print AEPrint ($res->{REP}) . "\n";
+    
+    $self->setInteractionOn();
+
+    
 }
 
 sub remove {

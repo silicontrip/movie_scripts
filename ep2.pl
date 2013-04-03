@@ -34,17 +34,19 @@ while (my $filename = shift) {
 	$episode->seriesName($seriesName);
 
 	if ($id) { 
-
-		my $title = $eplfac->initWithTVDBId($id);
-
-		#print "return title $title\n";
+		$title = $eplfac->initWithTVDBId($id);
 		$episode->seriesName($title);
+	}
 
-	} else {
+	$episode->seriesNumber($seriesNumber);
+	$episode->episodeNumber($episodeNumber);
+	$episode->seriesName($seriesName);
+    
+	if (!$id) {
 		$eplfac->initWithName($episode->seriesName());
 	}	
 	
-	my $meta = new AVMeta($filename,"/Volumes/Drobo/bin/metadata-example"); # should make this a config option.
+	my $meta = new AVMeta($filename,"/usr/local/bin/libav2yuv -i"); # should make this a config option.
 	my $newName =  $episode->seriesName() . "-" . $episode->seNumber() . "." ;
 #	print "DEBUG: " . $episode->seriesName() ." - ".$episode->seriesNumber() . " - " . $episode->episodeNumber . "\n";
 	my $epName = $eplfac->getName($episode->seriesName(),$episode->seriesNumber(),$episode->episodeNumber());

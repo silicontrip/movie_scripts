@@ -57,7 +57,7 @@ sub initWithTVDBId
 			if ($line =~ /\<h1>/) {
 				($title) = $line =~ /\">([^<]*)\<\/a>/; #"
 				$title = join " ", map {ucfirst} split " ", $title;
-				$title =~ s/[^a-zA-Z10-9]//g;
+				$title =~ s/[^a-zA-Z0-9]//g;
 				# $episodeList{'title'} = $title;
 				#print "TITLE: $title\n";
 			}
