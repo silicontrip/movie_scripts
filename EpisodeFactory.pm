@@ -48,17 +48,13 @@ sub seriesNumber {
 	
 	$season ="";
 	$episode ="";
-	
-	if ($n =~ /[^\d](\d)(\d\d)[^\d]/)
-	{ $season = $1; $episode = $2; }
-	if ($n =~ /(\d?\d)[xe](\d\d+)/i) 
-	{ $season = $1; $episode = $2; }
-	if ($n =~ /S(\d?\d)[^\d]*E(\d\d+)/i)
-	{ $season = $1; $episode = $2; }
-	if ($n =~ /[^\d](\d?\d)[^\d](\d\d+)[^\d]/i)
-	{ $season = $1; $episode = $2; }
-	if ($n =~ /S(\d?\d)E(\d\d+)/i)
-	{ $season = $1; $episode = $2; }
+
+	if ($n =~ /[^\d](\d\d)(\d\d)[^\d]/) { $season = $1; $episode = $2; }
+	if ($n =~ /[^\d](\d)(\d\d)[^\d]/) { $season = $1; $episode = $2; }
+	if ($n =~ /(\d?\d)[xe](\d\d+)/i) { $season = $1; $episode = $2; }
+	if ($n =~ /S(\d?\d)[^\d]*E(\d\d+)/i) { $season = $1; $episode = $2; }
+	if ($n =~ /[^\d](\d?\d)[^\d](\d\d+)[^\d]/i) { $season = $1; $episode = $2; }
+	if ($n =~ /S(\d?\d)E(\d\d+)/i) { $season = $1; $episode = $2; }
 
 	return $season;
 	

@@ -46,7 +46,7 @@ while (my $filename = shift) {
 		$eplfac->initWithName($episode->seriesName());
 	}	
 	
-	my $meta = new AVMeta($filename,"/usr/local/bin/libav2yuv -i"); # should make this a config option.
+	my $meta = new AVMeta($filename,"/Volumes/Drobo/bin/metadata-example"); # should make this a config option.
 	my $newName =  $episode->seriesName() . "-" . $episode->seNumber() . "." ;
 #	print "DEBUG: " . $episode->seriesName() ." - ".$episode->seriesNumber() . " - " . $episode->episodeNumber . "\n";
 	my $epName = $eplfac->getName($episode->seriesName(),$episode->seriesNumber(),$episode->episodeNumber());
@@ -89,7 +89,7 @@ while (my $filename = shift) {
 			}
 		}
 	} else {
-		print "UNKNOWN $filename\n";
+		print "UNKNOWN $filename ($newPath)\n";
 	}
 }
 
