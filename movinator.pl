@@ -185,6 +185,7 @@ for $g (@genre) {
 		
 		printf "link $nn to $g/\n";
 
+		link $nn, "$targetdir/.All/$nn";
 		link $nn, "$targetdir/$g/$nn";
 		#rename $n, "$targetdirseries/$nn";
 
