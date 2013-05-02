@@ -1,0 +1,14 @@
+#!/bin/sh
+
+
+for n in $@
+do
+
+echo $n
+
+new=`echo $n | sed s/Drobo/Aqualight/`
+
+rsync -av $n subzero:${new}
+
+
+done

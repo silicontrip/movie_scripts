@@ -1,0 +1,4 @@
+#!/bin/sh
+
+
+find /Volumes/Drobo/TVSeries -ctime -1 -type f -exec /Volumes/Drobo/bin/subzero_sync {} \;
