@@ -19,36 +19,36 @@ sub new
 
 sub seriesNumber {
 	my ( $self, $seriesNumber ) = @_;
-    $self->{_seNumber} = $seriesNumber if defined($seriesNumber);
+	$self->{_seNumber} = $seriesNumber if defined($seriesNumber);
 	
 	$seNumber = sprintf("%02d",0 + $self->{_seNumber});
 	
-    return $seNumber;
+	return $seNumber;
 }
 
 sub episodeNumber {
 	my ( $self, $episodeNumber ) = @_;
-    $self->{_epNumber} = $episodeNumber if defined($episodeNumber);
+	$self->{_epNumber} = $episodeNumber if defined($episodeNumber);
 	$epNumber = sprintf("%02d",0 + $self->{_epNumber});
 	
-    return $epNumber;
+	return $epNumber;
 }
 
 sub seNumber {
 
 	my ( $self ) = @_;
-    return "s" . $self->seriesNumber() . "e" . $self->episodeNumber()
+	return "s" . $self->seriesNumber() . "e" . $self->episodeNumber()
 }
 
 sub seriesName {
 	my ( $self, $seriesName ) = @_;
-    $self->{_seName} = $seriesName if defined($seriesName);
-    return $self->{_seName};
+	$self->{_seName} = $seriesName if defined($seriesName);
+	return $self->{_seName};
 }
 
 sub episodeName {
 	my ( $self, $episodeName ) = @_;
-    $self->{_epName} = $episodeName if defined($episodeName);
-    return $self->{_epName};
+	$self->{_epName} = $episodeName if defined($episodeName);
+	return $self->{_epName};
 }
 1;
