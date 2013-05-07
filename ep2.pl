@@ -33,6 +33,8 @@ while (my $filename = shift) {
 	$episode->episodeNumber($episodeNumber);
 	$episode->seriesName($seriesName);
 
+	my $id = $eplfac->idFromName($episode->seriesName());
+
 	if ($id) { 
 		$title = $eplfac->initWithTVDBId($id);
 		$episode->seriesName($title);
@@ -42,9 +44,6 @@ while (my $filename = shift) {
 	$episode->episodeNumber($episodeNumber);
 	$episode->seriesName($seriesName);
     
-	if (!$id) {
-		$eplfac->initWithName($episode->seriesName());
-	}	
 	
 	my $meta = new AVMeta($filename,"/Volumes/Drobo/bin/metadata-example"); # should make this a config option.
 	my $newName =  $episode->seriesName() . "-" . $episode->seNumber() . "." ;

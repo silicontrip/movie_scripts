@@ -6,8 +6,8 @@ sub new
 {
 	my $class = shift;
 	my $self = { _targetDir => shift,
-				 _epRegex => undef
-		};
+		_epRegex => undef
+	};
 
 	my $sdh;
 	my $episode;

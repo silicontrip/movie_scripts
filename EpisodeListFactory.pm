@@ -120,65 +120,8 @@ sub initWithName
 	#print "Init with Name: $name\n";
 	
 	if (!defined($self->{_db}->{$name})) {
+		my $id =  $self->idFromName($name);
 
-		my $episodeList = {};
-		
-		# check for local list
-		# determine id
-		
-		my $id;
-		my $targetdir = $self->{_targetDir};
-		local $/=undef;
-		if ( -r "$targetdir/$name/.id") 
-		{
-			open (ID,"$targetdir/$name/.id") ;
-			$id=<ID>;
-			close ID;
-		
-			chop($id);
-			#print "Read ID $id\n";
-		} else {
-		
-			my $sname;
-			my $lang;
-			my $oldid;
-			my $single = 1;
-			my $url = "http://thetvdb.com";
-			
-			$name =~ s/([a-z])([A-Z])/$1+$2/g;
-			$name =~ s/([a-zA-Z])([0-9])/$1+$2/g;
-			$name =~ s/([0-9])([a-zA-Z])/$1+$2/g;
-			$name =~ s/([A-Z])([A-Z])/$1+$2/g;
-			
-			#print "Name to ID: $name\n";
-			
-			my $episodes = get("$url/?string=$name&searchseriesid=&tab=listseries&function=Search");
-			
-			my @lines = split /\n/, $episodes;
-			
-			
-			foreach my $line (@lines) {
-				
-				chomp($line);
-				
-				$line =~ s/<[^>]*>/;/g;
-				$line =~ s/^\s+//g;
-				
-				#print "$line\n";
-				#;;;Eternal Law; ;;English;;238101;;
-				
-				($sname,$lang,$id) = $line =~ /^;;;([^;]*);*\s*;*([^;]*);*(\d+);*$/;
-				if ($sname) {
-					# print "$sname - $lang - $id\n";
-					if ($oldid && $oldid != $id) { $single = 0; }
-					$oldid = $id;
-				}
-			}
-			
-			$id = 0;
-			$id = $oldid if $single;
-			
-		}
 		if ($id) {
 			$self->initWithTVDBId($id);
 		}	
@@ -187,8 +130,81 @@ sub initWithName
 
 }
 
+sub idFromName
+{
+	my ( $self, $name ) = @_;
+
+	# check series isn't populated
+	# might store this in a hash array...	
+
+	#print "Init with Name: $name\n";
+	
+
+	my $episodeList = {};
+	
+	# check for local list
+	# determine id
+	
+	my $id;
+	my $targetdir = $self->{_targetDir};
+	local $/=undef;
+	if ( -r "$targetdir/$name/.id") 
+	{
+		open (ID,"$targetdir/$name/.id") ;
+		$id=<ID>;
+		close ID;
+	
+		chop($id);
+		#print "Read ID $id\n";
+	} else {
+	
+		my $sname;
+		my $lang;
+		my $oldid;
+		my $single = 1;
+		my $url = "http://thetvdb.com";
+		
+		$name =~ s/([a-z])([A-Z])/$1+$2/g;
+		$name =~ s/([a-zA-Z])([0-9])/$1+$2/g;
+		$name =~ s/([0-9])([a-zA-Z])/$1+$2/g;
+		$name =~ s/([A-Z])([A-Z])/$1+$2/g;
+		
+		#print "Name to ID: $name\n";
+		
+		my $episodes = get("$url/?string=$name&searchseriesid=&tab=listseries&function=Search");
+		
+		my @lines = split /\n/, $episodes;
+		
+		
+		foreach my $line (@lines) {
+			
+			chomp($line);
+			
+			$line =~ s/<[^>]*>/;/g;
+			$line =~ s/^\s+//g;
+			
+			#print "$line\n";
+			#;;;Eternal Law; ;;English;;238101;;
+			
+			($sname,$lang,$id) = $line =~ /^;;;([^;]*);*\s*;*([^;]*);*(\d+);*$/;
+			if ($sname) {
+				# print "$sname - $lang - $id\n";
+				if ($oldid && $oldid != $id) { $single = 0; }
+				$oldid = $id;
+			}
+		}
+		
+		$id = 0;
+		$id = $oldid if $single;
+		
+	}
+	return $id;
+
+
+}
+
 sub getName {
-	my ( $self, $name,$seriesnumber,$episodenumber ) = @_;
+my ( $self, $name,$seriesnumber,$episodenumber ) = @_;
 
 	my $se = $seriesnumber + 0;
 	my $ep = $episodenumber + 0;
