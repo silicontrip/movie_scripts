@@ -14,7 +14,7 @@ $ua -> timeout(30);
 
 
 $nodays = 0;
-$retention= 1500 ; #days
+$retention= 1500 * 86400 ; #days
 
 %month= (
 Jan => "0",
@@ -187,7 +187,7 @@ sub date_to_diff ($) {
 		($yy,$mm,$dd) = split(/-/,$date);
 		
 		if ($dd) {
-			$time_diff =time  - timelocal (00,00,12,$dd,$mm-1,$yy);
+			$time_diff =time  - timelocal (00,00,10,$dd,$mm-1,$yy);
 		} else { 
 			$time_diff=-99999999;
 		}
@@ -236,7 +236,7 @@ while($entry=readdir $dh)
 							
 							($date) = split(/ /,$episodelist{$episodes});
 							$time_diff = &date_to_diff($date);
-							$time_diff /= 86400;
+						#	$time_diff /= 86400;
 							$time_diff = sprintf ("%d",$time_diff);
 
 							if ($time_diff <= $retention) {
