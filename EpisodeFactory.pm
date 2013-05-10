@@ -41,6 +41,9 @@ sub new
 
 }
 
+
+
+
 sub seriesNumber {
 
 	my ( $self, $n ) = @_;
@@ -67,7 +70,10 @@ sub episodeNumber {
 	
 	$season ="";
 	$episode ="";
+
+	# ARG code duplication.
 	
+	if ($n =~ /[^\d](\d\d)(\d\d)[^\d]/) { $season = $1; $episode = $2; }
 	if ($n =~ /[^\d](\d)(\d\d)[^\d]/) { $season = $1; $episode = $2; }
 	if ($n =~ /(\d?\d)[xe](\d\d+)/i) { $season = $1; $episode = $2; }
 	if ($n =~ /S(\d?\d)[^\d]*E(\d\d+)/i) { $season = $1; $episode = $2; }
