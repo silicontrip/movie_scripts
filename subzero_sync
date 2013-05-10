@@ -7,13 +7,12 @@ do
 echo $n
 
 new=`echo $n | sed s/Drobo/Aqualight/`
+tty -s
 
-if [ -z "$PS1" ]
+if [ $? -gt 0 ]
 then
-echo "NI"
 rsync -av $n subzero:${new}
 else
-echo "I"
 rsync -avP $n subzero:${new}
 fi
 
