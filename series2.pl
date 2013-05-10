@@ -187,7 +187,7 @@ sub date_to_diff ($) {
 		($yy,$mm,$dd) = split(/-/,$date);
 		
 		if ($dd) {
-			$time_diff =time  - timelocal (00,00,10,$dd,$mm-1,$yy);
+			$time_diff =time  - timelocal (00,00,23,$dd,$mm-1,$yy);
 		} else { 
 			$time_diff=-99999999;
 		}
@@ -242,8 +242,12 @@ while($entry=readdir $dh)
 							if ($time_diff <= $retention) {
 							$time_key = $time_diff;
 
-							while($upcoming{$time_key}) { $time_key += 0.1; }
-							$upcoming{$time_key} ="$entry $episodes $episodelist{$episodes} $time_diff";
+							while($upcoming{$time_key}) { $time_key += 1; }
+							$display_time = $time_diff;
+							$display_time -= 86400 if $display_time < 0;
+							$display_time /= 86400;
+							$display_time = sprintf ("%d",$display_time);
+							$upcoming{$time_key} ="$entry $episodes $episodelist{$episodes} $display_time";
 }
 							&verbose_print ("$entry $episodes $episodelist{$episodes} $time_diff\n");
 								
