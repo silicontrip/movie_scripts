@@ -82,6 +82,7 @@ for my $id (sort(@list)) {
 	if($rec->matchID($match_id) && $rec->matchTitle($match_title)) {
 		
 		$rec->setTitle($set_title) if ($set_title);
+        # I don't think it's possible to change a recording duration.
 		$rec->setDuration($set_duration) if ($set_duration);
 
 		my $title = $rec->getTitle();
@@ -143,7 +144,7 @@ for my $id (sort(@prglist)) {
 	#print "$id\n";
 	
 	my $rec = new EyeTV($id,EyeTV::EyeTVProgram());
-        my $recording = new EyeTV($id,EyeTV::EyeTVRecording());
+    my $recording = new EyeTV($id,EyeTV::EyeTVRecording());
 	
 	#print "is rec\n";
 
