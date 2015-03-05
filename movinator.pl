@@ -95,27 +95,45 @@ sub get_movie_meta ($) {
 	
 	my ($n) = @_;
 	
-	foreach (`mplayer -benchmark -ao null -vo null -identify -frames 0 "$n"`) {
+	foreach (`/Volumes/Drobo/bin/metadata-example "$n"`) {
 		chop;
-		
-		if (/^ID_DEMUXER/) { ($ext) = /=(.*)/; }
-		if ($ext =~ /^mpeg/) { $ext = "mpg"; }
-		# it's actually more than just mkv, but this is the most common I'm moving
-		if ($ext =~ /^lavfpref/) { $ext = "mkv"; }
-		if (/^ID_VIDEO_FORMAT/) { ($vcodec) =  /=(.*)/; } 
-		if ($arch eq "powerpc") { $vcodec = reverse $vcodec; }
-		
-		if ($vcodec eq "10000001x0") { $vcodec = "mpeg1"; }
-		if ($vcodec eq "20000001x0") { $vcodec = "mpeg2"; }
-		
-		if (/^ID_VIDEO_WIDTH/) { ($width) = /=(.*)/; }
-		if (/^ID_VIDEO_HEIGHT/) { ($height) = /=(.*)/; }
-		if (/^ID_VIDEO_FPS/) { ($fps) = /=(.*)/; }
-		if (/^ID_AUDIO_RATE/) { ($arate) = /=(.*)/; }
-		if (/^ID_AUDIO_CODEC/) { ($acodec) = /=(.*)/; }
-		
-		if ($acodec eq "faad") { $acodec = "aac"; }
+
+		($key,$val) = split(/=/);
+		$meta{$key} = $val;
 	}
+
+		
+# encoder=transcode-1.1.0
+# FORMAT_NAME=avi
+# STREAMS=2
+# STREAM_0_TYPE=VIDEO
+# STREAM_VIDEO_CODEC_ID=MPEG4
+# STREAM_VIDEO_AFPS_RATIO=0:0
+# STREAM_VIDEO_FPS_RATIO=2997003:125000
+# STREAM_VIDEO_FPS=23.976024
+# STREAM_VIDEO_WIDTH=640
+# STREAM_VIDEO_HEIGHT=352
+# STREAM_VIDEO_PIX_FMT=yuv420p
+# STREAM_VIDEO_SAR=1:1
+# STREAM_VIDEO_REFFRAMES=1
+# STREAM_VIDEO_COLORSPACE=UNSPECIFIED
+# STREAM_VIDEO_COLORRANGE=mpeg
+# STREAM_VIDEO_FIELDORDER=UNKNOWN
+# STREAM_1_TYPE=AUDIO
+# STREAM_AUDIO_CODEC_ID=AC3
+# STREAM_AUDIO_SAMPLERATE=48000
+# STREAM_AUDIO_CHANNELS=6
+# STREAM_AUDIO_SAMPLEFORMAT=fltp
+
+		
+	$ext = $meta{'FORMAT_NAME'};
+	$vcodec = $meta{'STREAM_VIDEO_CODEC_ID'};
+	$width = $meta{'STREAM_VIDEO_WIDTH'};
+	$height = $meta{'STREAM_VIDEO_HEIGHT'};	
+	$fps = $meta{'STREAM_VIDEO_FPS'};
+	$arate = $meta{'STREAM_AUDIO_SAMPLERATE'};
+	$acodec = $meta{'STREAM_AUDIO_CODEC_ID'};
+		
 	$fps = int($fps + 0.5);
 	$arate =~ s/000$/k/;
 	
@@ -167,6 +185,7 @@ for $g (@genre) {
 		
 		printf "link $nn to $g/\n";
 
+		link $nn, "$targetdir/.All/$nn";
 		link $nn, "$targetdir/$g/$nn";
 		#rename $n, "$targetdirseries/$nn";
 

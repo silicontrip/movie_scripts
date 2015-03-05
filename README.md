@@ -30,6 +30,8 @@ Depends on EyeTV.pm
 This is a tool to setup/edit/delete and export programs and recordings from EyeTV.  This supports both version 2 and version 3.
 But requires code changes depending on the version.
 
+I have migrated the functionality of this tool into a complete objective-c tool called eyetvtool.  See the eyetvtool repository.
+
     Eye TV Tool.  A command line interface for controlling the Eye TV PVR software.
     Usage etvtool.pl [OPTION]
   

@@ -1,5 +1,6 @@
 <?php
 include("news.php");
+include("EpisodeFactory.php");
 function main($t) {
 
 $nzbdir = "/Volumes/Drobo/nzb/tmp";
@@ -32,6 +33,9 @@ print "</table>\n";
 <input type=submit>
 <table>
 <?
+
+$epfac = new EpisodeFactory("/Volumes/Drobo/TVSeries");
+
 if ($dir = @opendir("$nzbdir")) {
         while (($file = readdir($dir)) !== false) {
 		if (substr($file, -4) === ".nzb") {
@@ -43,7 +47,25 @@ if ($dir = @opendir("$nzbdir")) {
 	krsort($filelist);
 	foreach  ($filelist as $key => $value) { 
 		$urlfile = urlencode ($value);
-		print "<tr><td><input type=checkbox name=move[] value=$urlfile></td><td>$value</td></tr>\n";
+		$episode = $epfac->Episode($value);
+		print "<tr><td><input type=checkbox name=move[] value=$urlfile></td>";
+		print "<td>";
+		if ($episode->getSeriesName()) {
+			$seriesDir = "/Volumes/Drobo/TVSeries/".$episode->getSeriesName()."/S" . $episode->getSeriesNumber() ."/";
+			$epMatch =  $episode->getSeriesName() . "-" . $episode->getSENumber() ;
+			if ($sdh = @opendir($seriesDir)) {
+			while (($episodeFile = readdir($sdh)) !== false) {
+				if(substr($episodeFile,0,1) != '.') 
+				{
+					$thisEpisode = $epfac -> episode($episodeFile);
+					print $thisEpisode->getSENumber() . " ";
+				}
+			}
+			closedir($sdh);
+			}
+		}
+		print "</td>";
+		print "<td>$value</td></tr>\n";
 	}
 	
 	

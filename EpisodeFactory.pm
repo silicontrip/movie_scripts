@@ -6,8 +6,8 @@ sub new
 {
 	my $class = shift;
 	my $self = { _targetDir => shift,
-				 _epRegex => undef
-		};
+		_epRegex => undef
+	};
 
 	my $sdh;
 	my $episode;
@@ -41,6 +41,9 @@ sub new
 
 }
 
+
+
+
 sub seriesNumber {
 
 	my ( $self, $n ) = @_;
@@ -48,17 +51,13 @@ sub seriesNumber {
 	
 	$season ="";
 	$episode ="";
-	
-	if ($n =~ /[^\d](\d)(\d\d)[^\d]/)
-	{ $season = $1; $episode = $2; }
-	if ($n =~ /(\d?\d)[xe](\d\d+)/i) 
-	{ $season = $1; $episode = $2; }
-	if ($n =~ /S(\d?\d)[^\d]*E(\d\d+)/i)
-	{ $season = $1; $episode = $2; }
-	if ($n =~ /[^\d](\d?\d)[^\d](\d\d+)[^\d]/i)
-	{ $season = $1; $episode = $2; }
-	if ($n =~ /S(\d?\d)E(\d\d+)/i)
-	{ $season = $1; $episode = $2; }
+
+	if ($n =~ /[^\d](\d\d)(\d\d)[^\d]/) { $season = $1; $episode = $2; }
+	if ($n =~ /[^\d](\d)(\d\d)[^\d]/) { $season = $1; $episode = $2; }
+	if ($n =~ /(\d?\d)[xe](\d\d+)/i) { $season = $1; $episode = $2; }
+	if ($n =~ /S(\d?\d)[^\d]*E(\d\d+)/i) { $season = $1; $episode = $2; }
+	if ($n =~ /[^\d](\d?\d)[^\d](\d\d+)[^\d]/i) { $season = $1; $episode = $2; }
+	if ($n =~ /S(\d?\d)E(\d\d+)/i) { $season = $1; $episode = $2; }
 
 	return $season;
 	
@@ -71,7 +70,10 @@ sub episodeNumber {
 	
 	$season ="";
 	$episode ="";
+
+	# ARG code duplication.
 	
+	if ($n =~ /[^\d](\d\d)(\d\d)[^\d]/) { $season = $1; $episode = $2; }
 	if ($n =~ /[^\d](\d)(\d\d)[^\d]/) { $season = $1; $episode = $2; }
 	if ($n =~ /(\d?\d)[xe](\d\d+)/i) { $season = $1; $episode = $2; }
 	if ($n =~ /S(\d?\d)[^\d]*E(\d\d+)/i) { $season = $1; $episode = $2; }

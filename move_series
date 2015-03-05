@@ -1,0 +1,11 @@
+#!/bin/sh
+#find /Volumes/Drobo/nzb/complete -name \*mp4
+#find /Volumes/Drobo/nzb/complete -name \*mkv
+#find /Volumes/Drobo/nzb/complete -name \*avi
+
+export PERL5LIB=/Volumes/Drobo/bin
+
+find /Volumes/Drobo/nzb/complete -type f -name \*mp4 -exec /Volumes/Drobo/bin/ep2.pl -m {} \;
+find /Volumes/Drobo/nzb/complete -type f -name \*mkv -exec /Volumes/Drobo/bin/ep2.pl -m {} \;
+find /Volumes/Drobo/nzb/complete -type f -name \*avi -exec /Volumes/Drobo/bin/ep2.pl -m {} \;
+
