@@ -1,0 +1,21 @@
+
+
+series_data
+	init(title)
+	init(id)
+
+	getTitle()
+	getEpName(se,ep)
+	getEpDate(se,ep)
+
+
+file_asset
+	initFrom(path)
+	getContainer()
+	getVcodec()
+	getAcodec()
+	getWidth()
+	getHeight()
+	getFPS()
+	getArate()
+
