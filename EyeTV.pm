@@ -60,6 +60,9 @@ sub getList($) {
 	my ($obj) = @_;
 
 	my $evt = build_event(qw/core getd EyTV/, "'----':'obj '{form:indx,want:type(" . $obj . "),seld:abso('all '),from:null()}");
+
+    # my $evt = build_event(qw/core getd EyTV/, "'----':'obj '{form:indx,want:type(\@),seld:abso('all '),from:null()}",$obj);
+    
 	my $res=  $evt->send_event(kAEWaitReply);
 	
 	return undef if ($res->{ERRNO} != 0) ;
